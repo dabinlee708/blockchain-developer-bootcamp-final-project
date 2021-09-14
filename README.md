@@ -1,6 +1,6 @@
 Decentralized Game Rental
 
-Although we're seeing changes in the gaming industry where lots of games are no longer physically delivered to customers and instead streamed through cloud gaming instances or delivered digitally with no physical cartridges, CDs, DVDs, Chips and etc. However, there are still large number of games being published and sold in a physical format for various reasons and many gamers prefer the physical copy due to its resale value and being able to share it with friends. 
+We're seeing changes in gaming industry where lots of games are no longer physically delivered to customers and instead streamed through cloud gaming instances or delivered digitally with no physical cartridges, CDs, DVDs, Chips and etc. However, there are still large number of games being published and sold in a physical format for various reasons and many gamers prefer the physical copy due to its resale value and being able to share it with friends. 
 
 Often, pre-owned game titles were either rented from Small-medium enterprises or individuals where each game title belongs to the owner and had to be checked if the customer-returned game titles are in a good state after rental has been completed. This required the ones renting to have thorough checks on the game titles so that they can be rented out for a longer period of time, increasing the total return of the game title being rented.
 
