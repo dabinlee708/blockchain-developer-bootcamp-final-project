@@ -1,0 +1,4597 @@
+{
+  "contractName": "DeSwitch",
+  "abi": [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "registerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gameRenter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gameOwnerAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rentalRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "depositRequired",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogFOrGameRentalTxnCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "registerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gameOwnerAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rentalRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "depositRequired",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogForGameRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "registerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gameRenter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "gameOwnerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "LogForGameRentalRequested",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "games",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "gregisterId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rentalRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "depositRequired",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address payable",
+          "name": "gameOwner",
+          "type": "address"
+        },
+        {
+          "internalType": "enum DeSwitch.gameState",
+          "name": "state",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timeRentalStart",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address payable",
+          "name": "gameRenter",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_gameId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_rentalRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_depositRequired",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "trackingId",
+          "type": "uint256"
+        }
+      ],
+      "name": "rentGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "trackingId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "trackingId",
+          "type": "uint256"
+        }
+      ],
+      "name": "shipGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "trackingId",
+          "type": "uint256"
+        }
+      ],
+      "name": "receiveGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "trackingId",
+          "type": "uint256"
+        }
+      ],
+      "name": "returnGame",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gameId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"registerId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gameRenter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gameOwnerAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rentalRate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"depositRequired\",\"type\":\"uint256\"}],\"name\":\"LogFOrGameRentalTxnCompleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gameId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"registerId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gameOwnerAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rentalRate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"depositRequired\",\"type\":\"uint256\"}],\"name\":\"LogForGameRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gameId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"registerId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gameRenter\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"gameOwnerAddress\",\"type\":\"address\"}],\"name\":\"LogForGameRentalRequested\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"trackingId\",\"type\":\"uint256\"}],\"name\":\"buyGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"games\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"gameid\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gregisterId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rentalRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositRequired\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"gameOwner\",\"type\":\"address\"},{\"internalType\":\"enum DeSwitch.gameState\",\"name\":\"state\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"timeRentalStart\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"gameRenter\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"trackingId\",\"type\":\"uint256\"}],\"name\":\"receiveGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_gameId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_rentalRate\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_depositRequired\",\"type\":\"uint256\"}],\"name\":\"registerGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"trackingId\",\"type\":\"uint256\"}],\"name\":\"rentGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"trackingId\",\"type\":\"uint256\"}],\"name\":\"returnGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"trackingId\",\"type\":\"uint256\"}],\"name\":\"shipGame\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"project:/contracts/DeSwitch.sol\":\"DeSwitch\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/DeSwitch.sol\":{\"keccak256\":\"0x850757aa58cd179378c2afd57023f0538c7082578342d3b5a7421b9728c85d52\",\"urls\":[\"bzz-raw://d53e02f959db39ec633dc606a6e76e3012accd27a9d0f823eb9c879943af56f6\",\"dweb:/ipfs/Qmcp1wvrQLmND6p1qbZwN6e9YYdnU6t889FqZNSFjDyo9R\"]}},\"version\":1}",
+  "bytecode": "0x6080604052600060015534801561001557600080fd5b50610699806100256000396000f3fe6080604052600436106100705760003560e01c806379131a191161004e57806379131a1914610189578063f078785814610285578063f3130972146102d8578063f77605171461031e57610070565b80632146d89314610075578063513820ca146100e35780636f0b97a714610136575b600080fd5b34801561008157600080fd5b506100c26004803603606081101561009857600080fd5b81019080803590602001909291908035906020019092919080359060200190929190505050610364565b60405180831515151581526020018281526020019250505060405180910390f35b3480156100ef57600080fd5b5061011c6004803603602081101561010657600080fd5b81019080803590602001909291905050506105ac565b604051808215151515815260200191505060405180910390f35b34801561014257600080fd5b5061016f6004803603602081101561015957600080fd5b81019080803590602001909291905050506105b3565b604051808215151515815260200191505060405180910390f35b34801561019557600080fd5b506101d8600480360360208110156101ac57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506105ba565b604051808981526020018881526020018781526020018681526020018573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200184600381111561023257fe5b60ff1681526020018381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019850505050505050505060405180910390f35b34801561029157600080fd5b506102be600480360360208110156102a857600080fd5b810190808035906020019092919050505061064f565b604051808215151515815260200191505060405180910390f35b610304600480360360208110156102ee57600080fd5b8101908080359060200190929190505050610656565b604051808215151515815260200191505060405180910390f35b61034a6004803603602081101561033457600080fd5b810190808035906020019092919050505061065d565b604051808215151515815260200191505060405180910390f35b6000806001806000828254019250508190555060405180610100016040528086815260200160015481526020018581526020018481526020013373ffffffffffffffffffffffffffffffffffffffff168152602001600060038111156103c657fe5b815260200160008152602001600073ffffffffffffffffffffffffffffffffffffffff168152506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000820151816000015560208201518160010155604082015181600201556060820151816003015560808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060a08201518160040160146101000a81548160ff021916908360038111156104be57fe5b021790555060c0820151816005015560e08201518160060160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509050507f1514ac551452196cfee486346bb313635c81b22c7cc00f5959aabc3d4b9c3a2785600154338787604051808681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019550505050505060405180910390a16001805491509150935093915050565b6000919050565b6000919050565b60006020528060005260406000206000915090508060000154908060010154908060020154908060030154908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060040160149054906101000a900460ff16908060050154908060060160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905088565b6000919050565b6000919050565b600091905056fea265627a7a7231582059e28528b4783aa74abbc6ab8a83b8c48d878a591a11b84522d239c7b52d817d64736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600436106100705760003560e01c806379131a191161004e57806379131a1914610189578063f078785814610285578063f3130972146102d8578063f77605171461031e57610070565b80632146d89314610075578063513820ca146100e35780636f0b97a714610136575b600080fd5b34801561008157600080fd5b506100c26004803603606081101561009857600080fd5b81019080803590602001909291908035906020019092919080359060200190929190505050610364565b60405180831515151581526020018281526020019250505060405180910390f35b3480156100ef57600080fd5b5061011c6004803603602081101561010657600080fd5b81019080803590602001909291905050506105ac565b604051808215151515815260200191505060405180910390f35b34801561014257600080fd5b5061016f6004803603602081101561015957600080fd5b81019080803590602001909291905050506105b3565b604051808215151515815260200191505060405180910390f35b34801561019557600080fd5b506101d8600480360360208110156101ac57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506105ba565b604051808981526020018881526020018781526020018681526020018573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200184600381111561023257fe5b60ff1681526020018381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019850505050505050505060405180910390f35b34801561029157600080fd5b506102be600480360360208110156102a857600080fd5b810190808035906020019092919050505061064f565b604051808215151515815260200191505060405180910390f35b610304600480360360208110156102ee57600080fd5b8101908080359060200190929190505050610656565b604051808215151515815260200191505060405180910390f35b61034a6004803603602081101561033457600080fd5b810190808035906020019092919050505061065d565b604051808215151515815260200191505060405180910390f35b6000806001806000828254019250508190555060405180610100016040528086815260200160015481526020018581526020018481526020013373ffffffffffffffffffffffffffffffffffffffff168152602001600060038111156103c657fe5b815260200160008152602001600073ffffffffffffffffffffffffffffffffffffffff168152506000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000820151816000015560208201518160010155604082015181600201556060820151816003015560808201518160040160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060a08201518160040160146101000a81548160ff021916908360038111156104be57fe5b021790555060c0820151816005015560e08201518160060160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055509050507f1514ac551452196cfee486346bb313635c81b22c7cc00f5959aabc3d4b9c3a2785600154338787604051808681526020018581526020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019550505050505060405180910390a16001805491509150935093915050565b6000919050565b6000919050565b60006020528060005260406000206000915090508060000154908060010154908060020154908060030154908060040160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060040160149054906101000a900460ff16908060050154908060060160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905088565b6000919050565b6000919050565b600091905056fea265627a7a7231582059e28528b4783aa74abbc6ab8a83b8c48d878a591a11b84522d239c7b52d817d64736f6c63430005100032",
+  "sourceMap": "68:4387:0:-;;;831:1;813:19;;843:26;8:9:-1;5:2;;;30:1;27;20:12;5:2;843:26:0;68:4387;;;;;;",
+  "deployedSourceMap": "68:4387:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;873:1508;;8:9:-1;5:2;;;30:1;27;20:12;5:2;873:1508:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;873:1508:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3757:374;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3757:374:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3757:374:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;3419:333;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3419:333:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;3419:333:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;771:38;;8:9:-1;5:2;;;30:1;27;20:12;5:2;771:38:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;771:38:0;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4135:317;;8:9:-1;5:2;;;30:1;27;20:12;5:2;4135:317:0;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;4135:317:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2385:512;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2385:512:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;2901:514;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;2901:514:0;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;873:1508;965:4;971;1851:1;1837:10;;:15;;;;;;;;;;;1931:265;;;;;;;;1953:7;1931:265;;;;1982:10;;1931:265;;;;2013:11;1931:265;;;;2050:16;1931:265;;;;2086:10;1931:265;;;;;;2112:19;1931:265;;;;;;;;;;;;2157:1;1931:265;;;;2187:1;1931:265;;;;;1911:5;:17;1917:10;1911:17;;;;;;;;;;;;;;;:285;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2260:84;2281:7;2290:10;;2302;2314:11;2327:16;2260:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2359:4;2365:10;;2351:25;;;;873:1508;;;;;;:::o;3757:374::-;3810:4;3757:374;;;:::o;3419:333::-;3469:4;3419:333;;;:::o;771:38::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;4135:317::-;4187:4;4135:317;;;:::o;2385:512::-;2443:4;2385:512;;;:::o;2901:514::-;2958:4;2901:514;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\n\n\ncontract DeSwitch {\n  event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);\n  event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);\n  event LogFOrGameRentalTxnCompleted(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint rentalRate, uint depositRequired);\n  enum gameState {\n    Available,\n    Shipped,\n    Rented,\n    Sold\n  }\n\n  struct Game{\n    uint gameid;\n    uint gregisterId;\n    uint rentalRate;\n    uint depositRequired;\n    address payable gameOwner;\n    gameState state;\n    uint timeRentalStart;\n    address payable gameRenter;\n  }\n\n  \n  mapping (address => Game) public games;\n  uint registerId = 0 ;\n\n  \n    constructor() public {\n  }\n\n  function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(bool, uint){\n    \n    \n    //should be a public function as anyone should be able to put their game for sale/rental\n    //Users register games they own (Ex. Switch Games) as \"Available\"\n    //GameID refers to gameId from http://nswdb.com/ to avoid confusion between different game titles\n    //Require checks for validity of values submitted for required arguments\n    //Set gameState as \"Available\"\n    //Set gameOwner as msg.sender\n    //Set gameBuyer and gameRenter will be empty and get updated once a buyer triggers the rentGame function\n    //returns true/false if registeration was successful and a trackingId tagged to the registered game\n    \n    //Increase the registerId counter by 1 so that the next game gets registered with the next registerId.\n    //Consider hashing/randomizing instead of incremental values, can consider sha256(msg.sender+registerID)\n    registerId += 1;\n\n    //Create a Game struct with the provided values\n    games[msg.sender] = Game({\n      gameid : _gameId,\n      gregisterId : registerId,\n      rentalRate : _rentalRate,\n      depositRequired : _depositRequired,\n      gameOwner : msg.sender,\n      state : gameState.Available,\n      timeRentalStart : 0,\n      gameRenter : address(0)\n    });\n  \n    //Emits appropriate event to log the chagnes \n    emit LogForGameRegistered(_gameId, registerId, msg.sender, _rentalRate, _depositRequired);\n\n    return (true, registerId);\n  }\n\n  function rentGame(uint trackingId) public payable returns(bool) {\n    //should be \"payable\" as this requires ether to be transffered to the contract\n    //should be \"public\" as anyone should be able to rent the game \n    //Verify the state of trackingId to be \"Available\" using a modifier\n    //return true or false if the rentGame attempt was successful\n    //check if msg.value == games[trackingId].rentalRate\n    //at the end of this function the state of the Game should be set to \"TransactionInProgress\"\n  }\n\n  function buyGame(uint trackingId) public payable returns(bool){\n    //should be \"payable\" as this requires ether to be transffered to the contract\n    //should be \"public\" as anyone should be able to buy the game \n    //Verify the state of trackingId to be either \"Available\" using a modifier\n    //return true or false if the rentGame attempt was successful\n    //check if msg.value == games[trackingId].sellRate\n    //at the end of this function the state of the Game should be set to \"TransactionInProgress\"\n  }\n\n  function shipGame(uint trackingId) public returns(bool){\n    //To be called by the gameOwner to account for state update to \"Shipped\"\n    //Only the gameOwner with same account address as games[trackingId].gameOnwer can execute this function\n    //Require the games[trackingId].state to be \"AvailableForRent\" or \"AvailableForBuy\"\n  } \n\n  function receiveGame(uint trackingId) public returns(bool){\n    //To be called by the gameBuyer or gameRenter to account for state change to \"Rented\" or \"Sold\"\n    //This function triggers payment to the gameOwner address if the transaction completed was \"buy\" instead of \"rent\"\n    //This function makes the time to be loggged as the start of rental as timeRentalStart\n\n  }\n\n  function returnGame(uint trackingId) public returns(bool){\n    //To be called buy the owner once the game has returned in good condition.\n    //This function returns the deposit (Totaldeposit - rental fee) from the smart Contract to the renter\n    //To trigger payment function to the gameOwner for the rental fee\n  }\n\n}\n",
+  "sourcePath": "/home/dabin/consensys/blockchain-developer-bootcamp-final-project/contracts/DeSwitch.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/DeSwitch.sol",
+    "exportedSymbols": {
+      "DeSwitch": [
+        162
+      ]
+    },
+    "id": 163,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:32:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 162,
+        "linearizedBaseContracts": [
+          162
+        ],
+        "name": "DeSwitch",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 13,
+            "name": "LogForGameRegistered",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 12,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3,
+                  "indexed": false,
+                  "name": "gameId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13,
+                  "src": "117:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "117:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5,
+                  "indexed": false,
+                  "name": "registerId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13,
+                  "src": "130:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "130:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 7,
+                  "indexed": false,
+                  "name": "gameOwnerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13,
+                  "src": "147:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "147:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9,
+                  "indexed": false,
+                  "name": "rentalRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13,
+                  "src": "173:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "173:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 11,
+                  "indexed": false,
+                  "name": "depositRequired",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13,
+                  "src": "190:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 10,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "190:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "116:95:0"
+            },
+            "src": "90:122:0"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 23,
+            "name": "LogForGameRentalRequested",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 22,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 15,
+                  "indexed": false,
+                  "name": "gameId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 23,
+                  "src": "247:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 14,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "247:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 17,
+                  "indexed": false,
+                  "name": "registerId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 23,
+                  "src": "260:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 16,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "260:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 19,
+                  "indexed": false,
+                  "name": "gameRenter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 23,
+                  "src": "277:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 18,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "277:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 21,
+                  "indexed": false,
+                  "name": "gameOwnerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 23,
+                  "src": "297:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 20,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "297:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "246:76:0"
+            },
+            "src": "215:108:0"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 37,
+            "name": "LogFOrGameRentalTxnCompleted",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 36,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 25,
+                  "indexed": false,
+                  "name": "gameId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "361:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 24,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "361:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27,
+                  "indexed": false,
+                  "name": "registerId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "374:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "374:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 29,
+                  "indexed": false,
+                  "name": "gameRenter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "391:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 28,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "391:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 31,
+                  "indexed": false,
+                  "name": "gameOwnerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "411:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 30,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "411:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 33,
+                  "indexed": false,
+                  "name": "rentalRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "437:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 32,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "437:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 35,
+                  "indexed": false,
+                  "name": "depositRequired",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 37,
+                  "src": "454:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 34,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "454:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "360:115:0"
+            },
+            "src": "326:150:0"
+          },
+          {
+            "canonicalName": "DeSwitch.gameState",
+            "id": 42,
+            "members": [
+              {
+                "id": 38,
+                "name": "Available",
+                "nodeType": "EnumValue",
+                "src": "500:9:0"
+              },
+              {
+                "id": 39,
+                "name": "Shipped",
+                "nodeType": "EnumValue",
+                "src": "515:7:0"
+              },
+              {
+                "id": 40,
+                "name": "Rented",
+                "nodeType": "EnumValue",
+                "src": "528:6:0"
+              },
+              {
+                "id": 41,
+                "name": "Sold",
+                "nodeType": "EnumValue",
+                "src": "540:4:0"
+              }
+            ],
+            "name": "gameState",
+            "nodeType": "EnumDefinition",
+            "src": "479:69:0"
+          },
+          {
+            "canonicalName": "DeSwitch.Game",
+            "id": 59,
+            "members": [
+              {
+                "constant": false,
+                "id": 44,
+                "name": "gameid",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "569:11:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 43,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "569:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 46,
+                "name": "gregisterId",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "586:16:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 45,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "586:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 48,
+                "name": "rentalRate",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "608:15:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 47,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "608:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 50,
+                "name": "depositRequired",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "629:20:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 49,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "629:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 52,
+                "name": "gameOwner",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "655:25:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address_payable",
+                  "typeString": "address payable"
+                },
+                "typeName": {
+                  "id": 51,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "655:15:0",
+                  "stateMutability": "payable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 54,
+                "name": "state",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "686:15:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_gameState_$42",
+                  "typeString": "enum DeSwitch.gameState"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 53,
+                  "name": "gameState",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 42,
+                  "src": "686:9:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_gameState_$42",
+                    "typeString": "enum DeSwitch.gameState"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 56,
+                "name": "timeRentalStart",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "707:20:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 55,
+                  "name": "uint",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "707:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 58,
+                "name": "gameRenter",
+                "nodeType": "VariableDeclaration",
+                "scope": 59,
+                "src": "733:26:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address_payable",
+                  "typeString": "address payable"
+                },
+                "typeName": {
+                  "id": 57,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "733:15:0",
+                  "stateMutability": "payable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Game",
+            "nodeType": "StructDefinition",
+            "scope": 162,
+            "src": "552:212:0",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 63,
+            "name": "games",
+            "nodeType": "VariableDeclaration",
+            "scope": 162,
+            "src": "771:38:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Game_$59_storage_$",
+              "typeString": "mapping(address => struct DeSwitch.Game)"
+            },
+            "typeName": {
+              "id": 62,
+              "keyType": {
+                "id": 60,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "780:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "771:25:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Game_$59_storage_$",
+                "typeString": "mapping(address => struct DeSwitch.Game)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 61,
+                "name": "Game",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 59,
+                "src": "791:4:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Game_$59_storage_ptr",
+                  "typeString": "struct DeSwitch.Game"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 66,
+            "name": "registerId",
+            "nodeType": "VariableDeclaration",
+            "scope": 162,
+            "src": "813:19:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 64,
+              "name": "uint",
+              "nodeType": "ElementaryTypeName",
+              "src": "813:4:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "30",
+              "id": 65,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "number",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "831:1:0",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_rational_0_by_1",
+                "typeString": "int_const 0"
+              },
+              "value": "0"
+            },
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 69,
+              "nodeType": "Block",
+              "src": "864:5:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 70,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 67,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "854:2:0"
+            },
+            "returnParameters": {
+              "id": 68,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "864:0:0"
+            },
+            "scope": 162,
+            "src": "843:26:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 120,
+              "nodeType": "Block",
+              "src": "976:1405:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 85,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 83,
+                      "name": "registerId",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 66,
+                      "src": "1837:10:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "+=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "31",
+                      "id": 84,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1851:1:0",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_1_by_1",
+                        "typeString": "int_const 1"
+                      },
+                      "value": "1"
+                    },
+                    "src": "1837:15:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 86,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1837:15:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 105,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 87,
+                        "name": "games",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 63,
+                        "src": "1911:5:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_address_$_t_struct$_Game_$59_storage_$",
+                          "typeString": "mapping(address => struct DeSwitch.Game storage ref)"
+                        }
+                      },
+                      "id": 90,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 88,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 177,
+                          "src": "1917:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 89,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1917:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1911:17:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Game_$59_storage",
+                        "typeString": "struct DeSwitch.Game storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 92,
+                          "name": "_gameId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 72,
+                          "src": "1953:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 93,
+                          "name": "registerId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 66,
+                          "src": "1982:10:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 94,
+                          "name": "_rentalRate",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 74,
+                          "src": "2013:11:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 95,
+                          "name": "_depositRequired",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 76,
+                          "src": "2050:16:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 96,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 177,
+                            "src": "2086:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 97,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2086:10:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 98,
+                            "name": "gameState",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 42,
+                            "src": "2112:9:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_enum$_gameState_$42_$",
+                              "typeString": "type(enum DeSwitch.gameState)"
+                            }
+                          },
+                          "id": 99,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "memberName": "Available",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2112:19:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_enum$_gameState_$42",
+                            "typeString": "enum DeSwitch.gameState"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 100,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "2157:1:0",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 102,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "2187:1:0",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 101,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "2179:7:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 103,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2179:10:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          },
+                          {
+                            "typeIdentifier": "t_enum$_gameState_$42",
+                            "typeString": "enum DeSwitch.gameState"
+                          },
+                          {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        ],
+                        "id": 91,
+                        "name": "Game",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 59,
+                        "src": "1931:4:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_struct$_Game_$59_storage_ptr_$",
+                          "typeString": "type(struct DeSwitch.Game storage pointer)"
+                        }
+                      },
+                      "id": 104,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "structConstructorCall",
+                      "lValueRequested": false,
+                      "names": [
+                        "gameid",
+                        "gregisterId",
+                        "rentalRate",
+                        "depositRequired",
+                        "gameOwner",
+                        "state",
+                        "timeRentalStart",
+                        "gameRenter"
+                      ],
+                      "nodeType": "FunctionCall",
+                      "src": "1931:265:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Game_$59_memory",
+                        "typeString": "struct DeSwitch.Game memory"
+                      }
+                    },
+                    "src": "1911:285:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Game_$59_storage",
+                      "typeString": "struct DeSwitch.Game storage ref"
+                    }
+                  },
+                  "id": 106,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1911:285:0"
+                },
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 108,
+                        "name": "_gameId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 72,
+                        "src": "2281:7:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 109,
+                        "name": "registerId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 66,
+                        "src": "2290:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 110,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 177,
+                          "src": "2302:3:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 111,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "2302:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 112,
+                        "name": "_rentalRate",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 74,
+                        "src": "2314:11:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 113,
+                        "name": "_depositRequired",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 76,
+                        "src": "2327:16:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 107,
+                      "name": "LogForGameRegistered",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 13,
+                      "src": "2260:20:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$_t_uint256_$_t_address_$_t_uint256_$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256,uint256,address,uint256,uint256)"
+                      }
+                    },
+                    "id": 114,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2260:84:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 115,
+                  "nodeType": "EmitStatement",
+                  "src": "2255:89:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "components": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "74727565",
+                        "id": 116,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "bool",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2359:4:0",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "value": "true"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 117,
+                        "name": "registerId",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 66,
+                        "src": "2365:10:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "id": 118,
+                    "isConstant": false,
+                    "isInlineArray": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "TupleExpression",
+                    "src": "2358:18:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$_t_bool_$_t_uint256_$",
+                      "typeString": "tuple(bool,uint256)"
+                    }
+                  },
+                  "functionReturnParameters": 82,
+                  "id": 119,
+                  "nodeType": "Return",
+                  "src": "2351:25:0"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 121,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "registerGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 77,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 72,
+                  "name": "_gameId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "895:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 71,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "895:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 74,
+                  "name": "_rentalRate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "909:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 73,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "909:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 76,
+                  "name": "_depositRequired",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "927:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 75,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "927:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "894:55:0"
+            },
+            "returnParameters": {
+              "id": 82,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 79,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "965:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 78,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "965:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 81,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 121,
+                  "src": "971:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 80,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "971:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "964:12:0"
+            },
+            "scope": 162,
+            "src": "873:1508:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 128,
+              "nodeType": "Block",
+              "src": "2449:448:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 129,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "rentGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 124,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 123,
+                  "name": "trackingId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "2403:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 122,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2403:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2402:17:0"
+            },
+            "returnParameters": {
+              "id": 127,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 126,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 129,
+                  "src": "2443:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 125,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2443:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2442:6:0"
+            },
+            "scope": 162,
+            "src": "2385:512:0",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 136,
+              "nodeType": "Block",
+              "src": "2963:452:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 137,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "buyGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 132,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 131,
+                  "name": "trackingId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 137,
+                  "src": "2918:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 130,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2918:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2917:17:0"
+            },
+            "returnParameters": {
+              "id": 135,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 134,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 137,
+                  "src": "2958:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 133,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2958:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2957:6:0"
+            },
+            "scope": 162,
+            "src": "2901:514:0",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 144,
+              "nodeType": "Block",
+              "src": "3474:278:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 145,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "shipGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 140,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 139,
+                  "name": "trackingId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 145,
+                  "src": "3437:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 138,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3437:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3436:17:0"
+            },
+            "returnParameters": {
+              "id": 143,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 142,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 145,
+                  "src": "3469:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 141,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3469:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3468:6:0"
+            },
+            "scope": 162,
+            "src": "3419:333:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 152,
+              "nodeType": "Block",
+              "src": "3815:316:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 153,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "receiveGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 148,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 147,
+                  "name": "trackingId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 153,
+                  "src": "3778:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 146,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3778:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3777:17:0"
+            },
+            "returnParameters": {
+              "id": 151,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 150,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 153,
+                  "src": "3810:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 149,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3810:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3809:6:0"
+            },
+            "scope": 162,
+            "src": "3757:374:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 160,
+              "nodeType": "Block",
+              "src": "4192:260:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 161,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "returnGame",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 156,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 155,
+                  "name": "trackingId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 161,
+                  "src": "4155:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 154,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4155:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4154:17:0"
+            },
+            "returnParameters": {
+              "id": 159,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 158,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 161,
+                  "src": "4187:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 157,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4187:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4186:6:0"
+            },
+            "scope": 162,
+            "src": "4135:317:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 163,
+        "src": "68:4387:0"
+      }
+    ],
+    "src": "32:4424:0"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/DeSwitch.sol",
+      "exportedSymbols": {
+        "DeSwitch": [
+          162
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".22",
+            "<",
+            "0.9",
+            ".0"
+          ]
+        },
+        "id": 1,
+        "name": "PragmaDirective",
+        "src": "32:32:0"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            162
+          ],
+          "name": "DeSwitch",
+          "scope": 163
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "LogForGameRegistered"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameId",
+                      "scope": 13,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 2,
+                        "name": "ElementaryTypeName",
+                        "src": "117:4:0"
+                      }
+                    ],
+                    "id": 3,
+                    "name": "VariableDeclaration",
+                    "src": "117:11:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "registerId",
+                      "scope": 13,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 4,
+                        "name": "ElementaryTypeName",
+                        "src": "130:4:0"
+                      }
+                    ],
+                    "id": 5,
+                    "name": "VariableDeclaration",
+                    "src": "130:15:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameOwnerAddress",
+                      "scope": 13,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 6,
+                        "name": "ElementaryTypeName",
+                        "src": "147:7:0"
+                      }
+                    ],
+                    "id": 7,
+                    "name": "VariableDeclaration",
+                    "src": "147:24:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "rentalRate",
+                      "scope": 13,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 8,
+                        "name": "ElementaryTypeName",
+                        "src": "173:4:0"
+                      }
+                    ],
+                    "id": 9,
+                    "name": "VariableDeclaration",
+                    "src": "173:15:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "depositRequired",
+                      "scope": 13,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 10,
+                        "name": "ElementaryTypeName",
+                        "src": "190:4:0"
+                      }
+                    ],
+                    "id": 11,
+                    "name": "VariableDeclaration",
+                    "src": "190:20:0"
+                  }
+                ],
+                "id": 12,
+                "name": "ParameterList",
+                "src": "116:95:0"
+              }
+            ],
+            "id": 13,
+            "name": "EventDefinition",
+            "src": "90:122:0"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "LogForGameRentalRequested"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameId",
+                      "scope": 23,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 14,
+                        "name": "ElementaryTypeName",
+                        "src": "247:4:0"
+                      }
+                    ],
+                    "id": 15,
+                    "name": "VariableDeclaration",
+                    "src": "247:11:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "registerId",
+                      "scope": 23,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 16,
+                        "name": "ElementaryTypeName",
+                        "src": "260:4:0"
+                      }
+                    ],
+                    "id": 17,
+                    "name": "VariableDeclaration",
+                    "src": "260:15:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameRenter",
+                      "scope": 23,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 18,
+                        "name": "ElementaryTypeName",
+                        "src": "277:7:0"
+                      }
+                    ],
+                    "id": 19,
+                    "name": "VariableDeclaration",
+                    "src": "277:18:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameOwnerAddress",
+                      "scope": 23,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 20,
+                        "name": "ElementaryTypeName",
+                        "src": "297:7:0"
+                      }
+                    ],
+                    "id": 21,
+                    "name": "VariableDeclaration",
+                    "src": "297:24:0"
+                  }
+                ],
+                "id": 22,
+                "name": "ParameterList",
+                "src": "246:76:0"
+              }
+            ],
+            "id": 23,
+            "name": "EventDefinition",
+            "src": "215:108:0"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "LogFOrGameRentalTxnCompleted"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameId",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 24,
+                        "name": "ElementaryTypeName",
+                        "src": "361:4:0"
+                      }
+                    ],
+                    "id": 25,
+                    "name": "VariableDeclaration",
+                    "src": "361:11:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "registerId",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 26,
+                        "name": "ElementaryTypeName",
+                        "src": "374:4:0"
+                      }
+                    ],
+                    "id": 27,
+                    "name": "VariableDeclaration",
+                    "src": "374:15:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameRenter",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 28,
+                        "name": "ElementaryTypeName",
+                        "src": "391:7:0"
+                      }
+                    ],
+                    "id": 29,
+                    "name": "VariableDeclaration",
+                    "src": "391:18:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "gameOwnerAddress",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 30,
+                        "name": "ElementaryTypeName",
+                        "src": "411:7:0"
+                      }
+                    ],
+                    "id": 31,
+                    "name": "VariableDeclaration",
+                    "src": "411:24:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "rentalRate",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 32,
+                        "name": "ElementaryTypeName",
+                        "src": "437:4:0"
+                      }
+                    ],
+                    "id": 33,
+                    "name": "VariableDeclaration",
+                    "src": "437:15:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "depositRequired",
+                      "scope": 37,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 34,
+                        "name": "ElementaryTypeName",
+                        "src": "454:4:0"
+                      }
+                    ],
+                    "id": 35,
+                    "name": "VariableDeclaration",
+                    "src": "454:20:0"
+                  }
+                ],
+                "id": 36,
+                "name": "ParameterList",
+                "src": "360:115:0"
+              }
+            ],
+            "id": 37,
+            "name": "EventDefinition",
+            "src": "326:150:0"
+          },
+          {
+            "attributes": {
+              "canonicalName": "DeSwitch.gameState",
+              "name": "gameState"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "Available"
+                },
+                "id": 38,
+                "name": "EnumValue",
+                "src": "500:9:0"
+              },
+              {
+                "attributes": {
+                  "name": "Shipped"
+                },
+                "id": 39,
+                "name": "EnumValue",
+                "src": "515:7:0"
+              },
+              {
+                "attributes": {
+                  "name": "Rented"
+                },
+                "id": 40,
+                "name": "EnumValue",
+                "src": "528:6:0"
+              },
+              {
+                "attributes": {
+                  "name": "Sold"
+                },
+                "id": 41,
+                "name": "EnumValue",
+                "src": "540:4:0"
+              }
+            ],
+            "id": 42,
+            "name": "EnumDefinition",
+            "src": "479:69:0"
+          },
+          {
+            "attributes": {
+              "canonicalName": "DeSwitch.Game",
+              "name": "Game",
+              "scope": 162,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "gameid",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 43,
+                    "name": "ElementaryTypeName",
+                    "src": "569:4:0"
+                  }
+                ],
+                "id": 44,
+                "name": "VariableDeclaration",
+                "src": "569:11:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "gregisterId",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 45,
+                    "name": "ElementaryTypeName",
+                    "src": "586:4:0"
+                  }
+                ],
+                "id": 46,
+                "name": "VariableDeclaration",
+                "src": "586:16:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "rentalRate",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 47,
+                    "name": "ElementaryTypeName",
+                    "src": "608:4:0"
+                  }
+                ],
+                "id": 48,
+                "name": "VariableDeclaration",
+                "src": "608:15:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "depositRequired",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 49,
+                    "name": "ElementaryTypeName",
+                    "src": "629:4:0"
+                  }
+                ],
+                "id": 50,
+                "name": "VariableDeclaration",
+                "src": "629:20:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "gameOwner",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address payable",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "payable",
+                      "type": "address payable"
+                    },
+                    "id": 51,
+                    "name": "ElementaryTypeName",
+                    "src": "655:15:0"
+                  }
+                ],
+                "id": 52,
+                "name": "VariableDeclaration",
+                "src": "655:25:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "state",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "enum DeSwitch.gameState",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "gameState",
+                      "referencedDeclaration": 42,
+                      "type": "enum DeSwitch.gameState"
+                    },
+                    "id": 53,
+                    "name": "UserDefinedTypeName",
+                    "src": "686:9:0"
+                  }
+                ],
+                "id": 54,
+                "name": "VariableDeclaration",
+                "src": "686:15:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "timeRentalStart",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 55,
+                    "name": "ElementaryTypeName",
+                    "src": "707:4:0"
+                  }
+                ],
+                "id": 56,
+                "name": "VariableDeclaration",
+                "src": "707:20:0"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "gameRenter",
+                  "scope": 59,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address payable",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "payable",
+                      "type": "address payable"
+                    },
+                    "id": 57,
+                    "name": "ElementaryTypeName",
+                    "src": "733:15:0"
+                  }
+                ],
+                "id": 58,
+                "name": "VariableDeclaration",
+                "src": "733:26:0"
+              }
+            ],
+            "id": 59,
+            "name": "StructDefinition",
+            "src": "552:212:0"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "games",
+              "scope": 162,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "mapping(address => struct DeSwitch.Game)",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "type": "mapping(address => struct DeSwitch.Game)"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "type": "address"
+                    },
+                    "id": 60,
+                    "name": "ElementaryTypeName",
+                    "src": "780:7:0"
+                  },
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "Game",
+                      "referencedDeclaration": 59,
+                      "type": "struct DeSwitch.Game"
+                    },
+                    "id": 61,
+                    "name": "UserDefinedTypeName",
+                    "src": "791:4:0"
+                  }
+                ],
+                "id": 62,
+                "name": "Mapping",
+                "src": "771:25:0"
+              }
+            ],
+            "id": 63,
+            "name": "VariableDeclaration",
+            "src": "771:38:0"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "registerId",
+              "scope": 162,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "uint256",
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "uint",
+                  "type": "uint256"
+                },
+                "id": 64,
+                "name": "ElementaryTypeName",
+                "src": "813:4:0"
+              },
+              {
+                "attributes": {
+                  "argumentTypes": null,
+                  "hexvalue": "30",
+                  "isConstant": false,
+                  "isLValue": false,
+                  "isPure": true,
+                  "lValueRequested": false,
+                  "subdenomination": null,
+                  "token": "number",
+                  "type": "int_const 0",
+                  "value": "0"
+                },
+                "id": 65,
+                "name": "Literal",
+                "src": "831:1:0"
+              }
+            ],
+            "id": 66,
+            "name": "VariableDeclaration",
+            "src": "813:19:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": true,
+              "kind": "constructor",
+              "modifiers": [
+                null
+              ],
+              "name": "",
+              "scope": 162,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 67,
+                "name": "ParameterList",
+                "src": "854:2:0"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 68,
+                "name": "ParameterList",
+                "src": "864:0:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 69,
+                "name": "Block",
+                "src": "864:5:0"
+              }
+            ],
+            "id": 70,
+            "name": "FunctionDefinition",
+            "src": "843:26:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "registerGame",
+              "scope": 162,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_gameId",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 71,
+                        "name": "ElementaryTypeName",
+                        "src": "895:4:0"
+                      }
+                    ],
+                    "id": 72,
+                    "name": "VariableDeclaration",
+                    "src": "895:12:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_rentalRate",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 73,
+                        "name": "ElementaryTypeName",
+                        "src": "909:4:0"
+                      }
+                    ],
+                    "id": 74,
+                    "name": "VariableDeclaration",
+                    "src": "909:16:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_depositRequired",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 75,
+                        "name": "ElementaryTypeName",
+                        "src": "927:4:0"
+                      }
+                    ],
+                    "id": 76,
+                    "name": "VariableDeclaration",
+                    "src": "927:21:0"
+                  }
+                ],
+                "id": 77,
+                "name": "ParameterList",
+                "src": "894:55:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 78,
+                        "name": "ElementaryTypeName",
+                        "src": "965:4:0"
+                      }
+                    ],
+                    "id": 79,
+                    "name": "VariableDeclaration",
+                    "src": "965:4:0"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 121,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 80,
+                        "name": "ElementaryTypeName",
+                        "src": "971:4:0"
+                      }
+                    ],
+                    "id": 81,
+                    "name": "VariableDeclaration",
+                    "src": "971:4:0"
+                  }
+                ],
+                "id": 82,
+                "name": "ParameterList",
+                "src": "964:12:0"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "+=",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 66,
+                              "type": "uint256",
+                              "value": "registerId"
+                            },
+                            "id": 83,
+                            "name": "Identifier",
+                            "src": "1837:10:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "31",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "number",
+                              "type": "int_const 1",
+                              "value": "1"
+                            },
+                            "id": 84,
+                            "name": "Literal",
+                            "src": "1851:1:0"
+                          }
+                        ],
+                        "id": 85,
+                        "name": "Assignment",
+                        "src": "1837:15:0"
+                      }
+                    ],
+                    "id": 86,
+                    "name": "ExpressionStatement",
+                    "src": "1837:15:0"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "struct DeSwitch.Game storage ref"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "type": "struct DeSwitch.Game storage ref"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 63,
+                                  "type": "mapping(address => struct DeSwitch.Game storage ref)",
+                                  "value": "games"
+                                },
+                                "id": 87,
+                                "name": "Identifier",
+                                "src": "1911:5:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "sender",
+                                  "referencedDeclaration": null,
+                                  "type": "address payable"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 177,
+                                      "type": "msg",
+                                      "value": "msg"
+                                    },
+                                    "id": 88,
+                                    "name": "Identifier",
+                                    "src": "1917:3:0"
+                                  }
+                                ],
+                                "id": 89,
+                                "name": "MemberAccess",
+                                "src": "1917:10:0"
+                              }
+                            ],
+                            "id": 90,
+                            "name": "IndexAccess",
+                            "src": "1911:17:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": true,
+                              "lValueRequested": false,
+                              "names": [
+                                "gameid",
+                                "gregisterId",
+                                "rentalRate",
+                                "depositRequired",
+                                "gameOwner",
+                                "state",
+                                "timeRentalStart",
+                                "gameRenter"
+                              ],
+                              "type": "struct DeSwitch.Game memory",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_address_payable",
+                                      "typeString": "address payable"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_enum$_gameState_$42",
+                                      "typeString": "enum DeSwitch.gameState"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_rational_0_by_1",
+                                      "typeString": "int_const 0"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_address_payable",
+                                      "typeString": "address payable"
+                                    }
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 59,
+                                  "type": "type(struct DeSwitch.Game storage pointer)",
+                                  "value": "Game"
+                                },
+                                "id": 91,
+                                "name": "Identifier",
+                                "src": "1931:4:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 72,
+                                  "type": "uint256",
+                                  "value": "_gameId"
+                                },
+                                "id": 92,
+                                "name": "Identifier",
+                                "src": "1953:7:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 66,
+                                  "type": "uint256",
+                                  "value": "registerId"
+                                },
+                                "id": 93,
+                                "name": "Identifier",
+                                "src": "1982:10:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 74,
+                                  "type": "uint256",
+                                  "value": "_rentalRate"
+                                },
+                                "id": 94,
+                                "name": "Identifier",
+                                "src": "2013:11:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 76,
+                                  "type": "uint256",
+                                  "value": "_depositRequired"
+                                },
+                                "id": 95,
+                                "name": "Identifier",
+                                "src": "2050:16:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "sender",
+                                  "referencedDeclaration": null,
+                                  "type": "address payable"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 177,
+                                      "type": "msg",
+                                      "value": "msg"
+                                    },
+                                    "id": 96,
+                                    "name": "Identifier",
+                                    "src": "2086:3:0"
+                                  }
+                                ],
+                                "id": 97,
+                                "name": "MemberAccess",
+                                "src": "2086:10:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "member_name": "Available",
+                                  "referencedDeclaration": null,
+                                  "type": "enum DeSwitch.gameState"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 42,
+                                      "type": "type(enum DeSwitch.gameState)",
+                                      "value": "gameState"
+                                    },
+                                    "id": 98,
+                                    "name": "Identifier",
+                                    "src": "2112:9:0"
+                                  }
+                                ],
+                                "id": 99,
+                                "name": "MemberAccess",
+                                "src": "2112:19:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 100,
+                                "name": "Literal",
+                                "src": "2157:1:0"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "type": "address payable",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_rational_0_by_1",
+                                          "typeString": "int_const 0"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)",
+                                      "value": "address"
+                                    },
+                                    "id": 101,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "2179:7:0"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+                                    "id": 102,
+                                    "name": "Literal",
+                                    "src": "2187:1:0"
+                                  }
+                                ],
+                                "id": 103,
+                                "name": "FunctionCall",
+                                "src": "2179:10:0"
+                              }
+                            ],
+                            "id": 104,
+                            "name": "FunctionCall",
+                            "src": "1931:265:0"
+                          }
+                        ],
+                        "id": 105,
+                        "name": "Assignment",
+                        "src": "1911:285:0"
+                      }
+                    ],
+                    "id": 106,
+                    "name": "ExpressionStatement",
+                    "src": "1911:285:0"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 13,
+                              "type": "function (uint256,uint256,address,uint256,uint256)",
+                              "value": "LogForGameRegistered"
+                            },
+                            "id": 107,
+                            "name": "Identifier",
+                            "src": "2260:20:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 72,
+                              "type": "uint256",
+                              "value": "_gameId"
+                            },
+                            "id": 108,
+                            "name": "Identifier",
+                            "src": "2281:7:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 66,
+                              "type": "uint256",
+                              "value": "registerId"
+                            },
+                            "id": 109,
+                            "name": "Identifier",
+                            "src": "2290:10:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "sender",
+                              "referencedDeclaration": null,
+                              "type": "address payable"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 177,
+                                  "type": "msg",
+                                  "value": "msg"
+                                },
+                                "id": 110,
+                                "name": "Identifier",
+                                "src": "2302:3:0"
+                              }
+                            ],
+                            "id": 111,
+                            "name": "MemberAccess",
+                            "src": "2302:10:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 74,
+                              "type": "uint256",
+                              "value": "_rentalRate"
+                            },
+                            "id": 112,
+                            "name": "Identifier",
+                            "src": "2314:11:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 76,
+                              "type": "uint256",
+                              "value": "_depositRequired"
+                            },
+                            "id": 113,
+                            "name": "Identifier",
+                            "src": "2327:16:0"
+                          }
+                        ],
+                        "id": 114,
+                        "name": "FunctionCall",
+                        "src": "2260:84:0"
+                      }
+                    ],
+                    "id": 115,
+                    "name": "EmitStatement",
+                    "src": "2255:89:0"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 82
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isInlineArray": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "type": "tuple(bool,uint256)"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "74727565",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "bool",
+                              "type": "bool",
+                              "value": "true"
+                            },
+                            "id": 116,
+                            "name": "Literal",
+                            "src": "2359:4:0"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 66,
+                              "type": "uint256",
+                              "value": "registerId"
+                            },
+                            "id": 117,
+                            "name": "Identifier",
+                            "src": "2365:10:0"
+                          }
+                        ],
+                        "id": 118,
+                        "name": "TupleExpression",
+                        "src": "2358:18:0"
+                      }
+                    ],
+                    "id": 119,
+                    "name": "Return",
+                    "src": "2351:25:0"
+                  }
+                ],
+                "id": 120,
+                "name": "Block",
+                "src": "976:1405:0"
+              }
+            ],
+            "id": 121,
+            "name": "FunctionDefinition",
+            "src": "873:1508:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "rentGame",
+              "scope": 162,
+              "stateMutability": "payable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "trackingId",
+                      "scope": 129,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 122,
+                        "name": "ElementaryTypeName",
+                        "src": "2403:4:0"
+                      }
+                    ],
+                    "id": 123,
+                    "name": "VariableDeclaration",
+                    "src": "2403:15:0"
+                  }
+                ],
+                "id": 124,
+                "name": "ParameterList",
+                "src": "2402:17:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 129,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 125,
+                        "name": "ElementaryTypeName",
+                        "src": "2443:4:0"
+                      }
+                    ],
+                    "id": 126,
+                    "name": "VariableDeclaration",
+                    "src": "2443:4:0"
+                  }
+                ],
+                "id": 127,
+                "name": "ParameterList",
+                "src": "2442:6:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 128,
+                "name": "Block",
+                "src": "2449:448:0"
+              }
+            ],
+            "id": 129,
+            "name": "FunctionDefinition",
+            "src": "2385:512:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "buyGame",
+              "scope": 162,
+              "stateMutability": "payable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "trackingId",
+                      "scope": 137,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 130,
+                        "name": "ElementaryTypeName",
+                        "src": "2918:4:0"
+                      }
+                    ],
+                    "id": 131,
+                    "name": "VariableDeclaration",
+                    "src": "2918:15:0"
+                  }
+                ],
+                "id": 132,
+                "name": "ParameterList",
+                "src": "2917:17:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 137,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 133,
+                        "name": "ElementaryTypeName",
+                        "src": "2958:4:0"
+                      }
+                    ],
+                    "id": 134,
+                    "name": "VariableDeclaration",
+                    "src": "2958:4:0"
+                  }
+                ],
+                "id": 135,
+                "name": "ParameterList",
+                "src": "2957:6:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 136,
+                "name": "Block",
+                "src": "2963:452:0"
+              }
+            ],
+            "id": 137,
+            "name": "FunctionDefinition",
+            "src": "2901:514:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "shipGame",
+              "scope": 162,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "trackingId",
+                      "scope": 145,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 138,
+                        "name": "ElementaryTypeName",
+                        "src": "3437:4:0"
+                      }
+                    ],
+                    "id": 139,
+                    "name": "VariableDeclaration",
+                    "src": "3437:15:0"
+                  }
+                ],
+                "id": 140,
+                "name": "ParameterList",
+                "src": "3436:17:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 145,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 141,
+                        "name": "ElementaryTypeName",
+                        "src": "3469:4:0"
+                      }
+                    ],
+                    "id": 142,
+                    "name": "VariableDeclaration",
+                    "src": "3469:4:0"
+                  }
+                ],
+                "id": 143,
+                "name": "ParameterList",
+                "src": "3468:6:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 144,
+                "name": "Block",
+                "src": "3474:278:0"
+              }
+            ],
+            "id": 145,
+            "name": "FunctionDefinition",
+            "src": "3419:333:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "receiveGame",
+              "scope": 162,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "trackingId",
+                      "scope": 153,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 146,
+                        "name": "ElementaryTypeName",
+                        "src": "3778:4:0"
+                      }
+                    ],
+                    "id": 147,
+                    "name": "VariableDeclaration",
+                    "src": "3778:15:0"
+                  }
+                ],
+                "id": 148,
+                "name": "ParameterList",
+                "src": "3777:17:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 153,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 149,
+                        "name": "ElementaryTypeName",
+                        "src": "3810:4:0"
+                      }
+                    ],
+                    "id": 150,
+                    "name": "VariableDeclaration",
+                    "src": "3810:4:0"
+                  }
+                ],
+                "id": 151,
+                "name": "ParameterList",
+                "src": "3809:6:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 152,
+                "name": "Block",
+                "src": "3815:316:0"
+              }
+            ],
+            "id": 153,
+            "name": "FunctionDefinition",
+            "src": "3757:374:0"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "returnGame",
+              "scope": 162,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "trackingId",
+                      "scope": 161,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 154,
+                        "name": "ElementaryTypeName",
+                        "src": "4155:4:0"
+                      }
+                    ],
+                    "id": 155,
+                    "name": "VariableDeclaration",
+                    "src": "4155:15:0"
+                  }
+                ],
+                "id": 156,
+                "name": "ParameterList",
+                "src": "4154:17:0"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 161,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 157,
+                        "name": "ElementaryTypeName",
+                        "src": "4187:4:0"
+                      }
+                    ],
+                    "id": 158,
+                    "name": "VariableDeclaration",
+                    "src": "4187:4:0"
+                  }
+                ],
+                "id": 159,
+                "name": "ParameterList",
+                "src": "4186:6:0"
+              },
+              {
+                "attributes": {
+                  "statements": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 160,
+                "name": "Block",
+                "src": "4192:260:0"
+              }
+            ],
+            "id": 161,
+            "name": "FunctionDefinition",
+            "src": "4135:317:0"
+          }
+        ],
+        "id": 162,
+        "name": "ContractDefinition",
+        "src": "68:4387:0"
+      }
+    ],
+    "id": 163,
+    "name": "SourceUnit",
+    "src": "32:4424:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x61B28a04c63961BfCdb2169967D45E94d0e4c2EB",
+      "transactionHash": "0x46a559637cb102d17b61fbe980161b90cfc6d7cfd44bee46b150c8609dba10d9"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-11-01T15:54:24.771Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
