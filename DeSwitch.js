@@ -338,6 +338,8 @@ const ssABI = [
   }
 ]
 
+
+
 console.log("hello dapdeverlopers")
 window.addEventListener('load',function(){
     if (typeof window.ethereum !== 'undefined'){
@@ -403,3 +405,4 @@ ssQueryGame.onclick = async () => {
     // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
     console.log(deSwitch.methods.queryGameStatus(registerId).call())
 }
+
