@@ -9,7 +9,9 @@ contract DeSwitch {
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogFOrGameRentalTxnCompleted(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   enum gameState {
+    Invalid,
     Available,
+    Reserved,
     Shipped,
     Rented,
     Sold
@@ -35,7 +37,7 @@ contract DeSwitch {
     constructor() public {
   }
 
-  function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(bool, uint){
+  function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(uint, uint){
     //should be a public function as anyone should be able to put their game for sale/rental
     //Users register games they own (Ex. Switch Games) as "Available"
     //GameID refers to gameId from http://nswdb.com/ to avoid confusion between different game titles
@@ -64,7 +66,7 @@ contract DeSwitch {
 
     //Emits appropriate event to log the chagnes 
     emit LogForGameRegistered(_gameId, registerId, msg.sender, _rentalRate, _depositRequired);
-    return (true, registerId);
+    return (1, registerId);
   }
 
   function queryGameStatus(uint _registerId) public view returns(string memory){
@@ -85,17 +87,21 @@ contract DeSwitch {
     if (games[registerIdList[_registerId]].state == gameState.Shipped) return "Shipped";
     if (games[registerIdList[_registerId]].state == gameState.Rented) return "Rented";
     if (games[registerIdList[_registerId]].state == gameState.Sold) return "Sold";
-    else return "Invalid";
-    // return "Invalid";
+    // else return "Invalid";
+    return "Invalid";
   }
 
-  function rentGame(uint trackingId) public payable returns(bool) {
+  function rentGame(uint _trackingId) public payable returns(bool) {
     //should be "payable" as this requires ether to be transffered to the contract
     //should be "public" as anyone should be able to rent the game 
     //Verify the state of trackingId to be "Available" using a modifier
     //return true or false if the rentGame attempt was successful
     //check if msg.value == games[trackingId].rentalRate
     //at the end of this function the state of the Game should be set to "TransactionInProgress"
+    games[registerIdList[_trackingId]].gameRenter = msg.sender;
+    games[registerIdList[_trackingId]].state = gameState.Reserved;
+    // games[registerIdList[_trackignId]]
+    return true;
   }
 
   // function buyGame(uint trackingId) public payable returns(bool){
@@ -107,7 +113,7 @@ contract DeSwitch {
   //   //at the end of this function the state of the Game should be set to "TransactionInProgress"
   // }
 
-  function shipGame(uint trackingId) public returns(bool){
+  function shipGame(uint _trackingId) public returns(bool){
     //To be called by the gameOwner to account for state update to "Shipped"
     //Only the gameOwner with same account address as games[trackingId].gameOnwer can execute this function
     //Require the games[trackingId].state to be "AvailableForRent" or "AvailableForBuy"

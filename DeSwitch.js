@@ -217,9 +217,9 @@ const ssABI = [
     "name": "registerGame",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256",
         "name": "",
-        "type": "bool"
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -257,7 +257,7 @@ const ssABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "trackingId",
+        "name": "_trackingId",
         "type": "uint256"
       }
     ],
@@ -278,7 +278,7 @@ const ssABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "trackingId",
+        "name": "_trackingId",
         "type": "uint256"
       }
     ],
@@ -360,9 +360,11 @@ window.addEventListener('load',function(){
 )
 const metamaskEnable = document.getElementById('mm-connect')
 metamaskEnable.onclick = async () => {
-    console.log('beep')
+    // console.log('beep')
     await ethereum.request({ method:
     'eth_requestAccounts'})
+
+    
 
     const mmCurrentAccount = document.getElementById('mm-current-account');
     mmCurrentAccount.innerHTML = "Here's connected account: "+ethereum.selectedAddress;
@@ -371,38 +373,69 @@ metamaskEnable.onclick = async () => {
 
 const ssRegisterGame = document.getElementById("registerGame");
 ssRegisterGame.onclick = async () => {
-  const gameid = document.getElementById("gameid").value;
+  const gameid = document.getElementById("queryGameRegisterId").value;
 	const rentalRate = document.getElementById("rentalRate").value;
 	const depositRate = document.getElementById("depositRate").value;
 
-    console.log(gameid, rentalRate, depositRate)
+  console.log(gameid, rentalRate, depositRate);
 
-    var web3 = new Web3(window.ethereum)
+  var web3 = new Web3(window.ethereum);
 
-    const deSwitch = new web3.eth.Contract(ssABI, ssAddress)
+  const deSwitch = new web3.eth.Contract(ssABI, ssAddress);
 
-    deSwitch.setProvider(window.ethereum)
+  deSwitch.setProvider(window.ethereum);
+  // const {0: successOrFailure, 1: trackingId}
+  // const successOrFailure = document.getElementById("creationSuccess");
+  // const createdTrackingId = document.getElementById("createdTrackingId");
+  
+  await deSwitch.methods.registerGame(gameid, rentalRate, depositRate).send({from: ethereum.selectedAddress}).on('receipt', function(receipt){
+    // receipt example
+    console.log(receipt);
 
-    await deSwitch.methods.registerGame(gameid, rentalRate, depositRate).send({from: ethereum.selectedAddress})
-    deSwitch.events.LogForGameRegistered(function(error, event){console.log(event)})
+    }
+)
+
+  
+  // myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}
+// const {0: status, 1:trackingId} = result;
+  // console.log(result);
+  // console.log(result.registerId);
+  // deSwitch.events.LogForGameRegistered(function(error, event){console.log(event)})
+  // const result = await deSwitch.methods({from: accountAddress});
+  // const {0: strValue, 1: boolValue, 2: intValue} = result;
+
+  // console.log(strValue); // "data"
+  // console.log(boolValue); // true
+  // console.log(intValue); // 15
 }
 
 const ssQueryGame = document.getElementById("queryGame");
 ssQueryGame.onclick = async () => {
   const registerId = document.getElementById("queryGameRegisterId").value;
 
-    console.log(queryGameRegisterId)
+  console.log(queryGameRegisterId)
 
-    var web3 = new Web3(window.ethereum)
+  var web3 = new Web3(window.ethereum)
 
-    const deSwitch = new web3.eth.Contract(ssABI, ssAddress)
+  const deSwitch = new web3.eth.Contract(ssABI, ssAddress)
 
-    deSwitch.setProvider(window.ethereum)
+  deSwitch.setProvider(window.ethereum)
 
-    // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
+  // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
+  const gameStatus = document.getElementById("gameStatus");
+  // const gameState = ['Available','Shipped' ,'Rented' ,'Sold'];
+  // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
+  deSwitch.methods.queryGameStatus(registerId).call((err, result) => {
+    console.log(result);
+    const gameStatus = document.getElementById("gameStatus");
+    gameStatus.innerHTML = result;
 
-    // const gameState = ['Available','Shipped' ,'Rented' ,'Sold'];
-    // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
-    console.log(deSwitch.methods.queryGameStatus(registerId).call())
+  } );
+  // .then(console.log).then(function(error, response){
+    // gameStatus.innerHTML = response;
+    // console.log(typeof(response))
+    
+
+
 }
 
