@@ -9,16 +9,35 @@
     </head>
 <body>
     <h1>Welcome to Decentralized Switch Game Exchange</h1>
+    <h2>Connect Wallet</h2>
     <div id='mm-detected'></div>
     <button id="mm-connect">Connect to Meta Mask</button>
-
     <div id='mm-current-account'></div>
+    
+    <h2>Register Game</h2>
     <input id="gameid" type="number" placeholder="gameid"/>
     <input id="rentalRate" type="number" placeholder="Rental Rate"/>
     <input id="depositRate" type="number" placeholder="Deposit Amount"/>
+    <button id="registerGame">Register Game</button>
+   
+    <h2>Check Game Status</h2>
+    <input id="queryGameRegisterId" type="number" placeholder="query Game ID"/>
+    <button id="queryGame">Query Game Register ID</button>
     
-    <button id="ss-input-button">Register Game</button> 
-
+    <h2>Rent Game</h2>
+    <input id="rentGame" type="gameId" placeholder="gameId"/>
+    <button id="rentGame">Rent Game</button>
+    
+    <h2>Ship Game</h2>
+    <input id="rentGame" type="gameId" placeholder="gameId"/>
+    <button id="shipGame">Update to Shipped</button>
+    
+    <h2>Receive Game</h2>
+    <input id="rentGame" type="gameId" placeholder="gameId"/>
+    <button id="receiveGame">Update to Received</button>
+    
+    <h2>Recent Updates</h2>
+    
     <script src="DeSwitch.js"></script>
 </body>
 </html>  
