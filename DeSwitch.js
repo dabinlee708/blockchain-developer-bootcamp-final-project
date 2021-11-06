@@ -264,9 +264,9 @@ const ssABI = [
     "name": "rentGame",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "string",
         "name": "",
-        "type": "bool"
+        "type": "string"
       }
     ],
     "payable": true,
@@ -434,8 +434,34 @@ ssQueryGame.onclick = async () => {
   // .then(console.log).then(function(error, response){
     // gameStatus.innerHTML = response;
     // console.log(typeof(response))
-    
+
+const ssRentGame = document.getElementById("rentGame");
+ssRentGame.onclick = async ()=> {
+  const rentGameId = document.getElementById("rentGameId").value;
+  console.log("Rental Requested");
+  var web3 = new Web3(window.ethereum)
+  const deSwitch = new web3.eth.Contract(ssABI, ssAddress)
+  // deSwitch.setProvider(window.ethereum)
+  // deSwitch.methods.rentGame(rentGameId).call
+  await deSwitch.methods.rentGame(rentGameId).send({from: ethereum.selectedAddress}).on('receipt', function(receipt){
+  // await deSwitch.methods.rentGame(rentGameId).send({from: ethereum.selectedAddress}).call('receipt', function(receipt){
+    // receipt example
+    console.log(receipt);
+    console.log("gammeId",receipt.events.LogForGameRentalRequested.returnValues.gameId);
+    console.log("gameOwnerAddress",receipt.events.LogForGameRentalRequested.returnValues.gameOwnerAddress);
+    console.log("gameRenter",receipt.events.LogForGameRentalRequested.returnValues.gameRenter);
+    console.log("registerId",receipt.events.LogForGameRentalRequested.returnValues.registerId);
+    // console.log(result); 
+
+    //Fire a call query to fetch the result or use Events?
+    const gameRentalResult = document.getElementById("rentalResult");
+    gameRentalResult.innerHTML = ("successful. GameRenter "+ receipt.events.LogForGameRentalRequested.returnValues.gameRenter+ " GameOwner "+ receipt.events.LogForGameRentalRequested.returnValues.gameOwnerAddress +" with registerID of "+receipt.events.LogForGameRentalRequested.returnValues.registerId)
+  }
+  );
 
 
+
+  
+}
 }
 

@@ -91,7 +91,7 @@ contract DeSwitch {
     return "Invalid";
   }
 
-  function rentGame(uint _trackingId) public payable returns(bool) {
+  function rentGame(uint _trackingId) public payable returns(string memory) {
     //should be "payable" as this requires ether to be transffered to the contract
     //should be "public" as anyone should be able to rent the game 
     //Verify the state of trackingId to be "Available" using a modifier
@@ -101,7 +101,11 @@ contract DeSwitch {
     games[registerIdList[_trackingId]].gameRenter = msg.sender;
     games[registerIdList[_trackingId]].state = gameState.Reserved;
     // games[registerIdList[_trackignId]]
-    return true;
+
+    //Emit event
+    // event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
+    emit LogForGameRentalRequested(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    return "successfully rented";
   }
 
   // function buyGame(uint trackingId) public payable returns(bool){
