@@ -76,27 +76,21 @@
     <span id="createdTrackingId" type="number"></span>
     <span id="creationSuccess">-</span>
    
-    <h2>Check Game Status</h2>
-    <input id="queryGameRegisterId" type="number" placeholder="query Game ID"/>
+    <h2>Tracking ID</h2>
+    <input id="trackingId" type="number" placeholder="Tracking ID"/>
+    <br>
+    <span id="updateText">Pending Action</span>
+    <br>
     <button id="queryGame">Query Game Register ID</button>
-    <span id="gameStatusPreText">Queried game is </span><span id="gameStatus">GameStatus</span>
-
-    <h2>Rent Game</h2>
-    <input id="rentGameId" type="number" placeholder="trackingId"/>
+    <br>
     <button id="rentGame">Rent Game</button>
-    <span id="rentalResultPre">Game rental is</span><span id="rentalResult"></span>
     
-    <h2>Ship Game</h2>
-    <input id="shipGameId" type="number" placeholder="trackingId"/>
-    <button id="shipGamebutton">Update to Shipped</button>
-    
-    <h2>Receive Game</h2>
-    <input id="receiveGameId" type="number" placeholder="trackingId"/>
-    <button id="receiveGamebutton">Update to Received</button>
-    
-    <h2>Recent Updates</h2>
-    <button id="receiveGame">Fetch Updates</button>
-
+    <br>
+    <button id="shipGameToRenter">Ship to Renter</button>
+    <button id="shipGameToOwner">Ship to Owner</button>
+    <br>
+    <button id="receiveGameFromOwner">Receive from Owner</button>
+    <button id="receiveGameFromRenter">Receive from Renter</button>
     <script src="DeSwitch.js"></script>
 </body>
 </html>  

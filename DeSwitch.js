@@ -33,21 +33,40 @@ const ssABI = [
         "internalType": "address",
         "name": "gameOwnerAddress",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "rentalRate",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "depositRequired",
-        "type": "uint256"
       }
     ],
-    "name": "LogFOrGameRentalTxnCompleted",
+    "name": "LogForGameReceivedByOwner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "registerId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameRenter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameOwnerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LogForGameReceivedByRenter",
     "type": "event"
   },
   {
@@ -116,6 +135,68 @@ const ssABI = [
       }
     ],
     "name": "LogForGameRentalRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "registerId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameRenter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameOwnerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LogForGameShippedToOwner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gameId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "registerId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameRenter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "gameOwnerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LogForGameShippedToRenter",
     "type": "event"
   },
   {
@@ -285,9 +366,9 @@ const ssABI = [
     "name": "shipGame",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "string",
         "name": "",
-        "type": "bool"
+        "type": "string"
       }
     ],
     "payable": false,
@@ -299,16 +380,16 @@ const ssABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "trackingId",
+        "name": "_trackingId",
         "type": "uint256"
       }
     ],
-    "name": "receiveGame",
+    "name": "receiveGameRenter",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "string",
         "name": "",
-        "type": "bool"
+        "type": "string"
       }
     ],
     "payable": false,
@@ -320,16 +401,37 @@ const ssABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "trackingId",
+        "name": "_trackingId",
         "type": "uint256"
       }
     ],
     "name": "returnGame",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "string",
         "name": "",
-        "type": "bool"
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_trackingId",
+        "type": "uint256"
+      }
+    ],
+    "name": "receiveGameOwner",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "payable": false,
@@ -337,7 +439,6 @@ const ssABI = [
     "type": "function"
   }
 ]
-
 
 
 console.log("hello dapdeverlopers")
@@ -371,11 +472,23 @@ metamaskEnable.onclick = async () => {
 }
 
 
-const ssRegisterGame = document.getElementById("registerGame");
-ssRegisterGame.onclick = async () => {
+//declare buttons, input values and result update fields 
+const registerGame = document.getElementById("registerGame");
+
+const trackingId = document.getElementById("trackingID").value;
+const gameStatus = document.getElementById("updateText");
+const queryGame = document.getElementById("queryGame");
+const shipGameToRenter = document.getElementById("shipGameToRenter");
+const shipGameToOwner = document.getElementById("shipGameToOwner");
+
+
+
+
+registerGame.onclick = async () => {
   const gameid = document.getElementById("queryGameRegisterId").value;
-	const rentalRate = document.getElementById("rentalRate").value;
-	const depositRate = document.getElementById("depositRate").value;
+  const rentalRate = document.getElementById("rentalRate").value;
+  const depositRate = document.getElementById("depositRate").value;
+	
 
   console.log(gameid, rentalRate, depositRate);
 
@@ -409,9 +522,10 @@ ssRegisterGame.onclick = async () => {
   // console.log(intValue); // 15
 }
 
-const ssQueryGame = document.getElementById("queryGame");
+
+
 ssQueryGame.onclick = async () => {
-  const registerId = document.getElementById("queryGameRegisterId").value;
+  
 
   console.log(queryGameRegisterId)
 
@@ -422,13 +536,12 @@ ssQueryGame.onclick = async () => {
   deSwitch.setProvider(window.ethereum)
 
   // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
-  const gameStatus = document.getElementById("gameStatus");
+  
   // const gameState = ['Available','Shipped' ,'Rented' ,'Sold'];
   // console.log(await deSwitch.methods.queryGameStatus().send({from: ethereum.selectedAddress}))
   deSwitch.methods.queryGameStatus(registerId).call((err, result) => {
-    console.log(result);
-    const gameStatus = document.getElementById("gameStatus");
-    gameStatus.innerHTML = result;
+  console.log(result);
+  gameStatus.innerHTML = result;
 
   } );
   // .then(console.log).then(function(error, response){
@@ -451,16 +564,19 @@ ssRentGame.onclick = async ()=> {
     console.log("gameOwnerAddress",receipt.events.LogForGameRentalRequested.returnValues.gameOwnerAddress);
     console.log("gameRenter",receipt.events.LogForGameRentalRequested.returnValues.gameRenter);
     console.log("registerId",receipt.events.LogForGameRentalRequested.returnValues.registerId);
-    // console.log(result); 
 
-    //Fire a call query to fetch the result or use Events?
-    const gameRentalResult = document.getElementById("rentalResult");
-    gameRentalResult.innerHTML = ("successful. GameRenter "+ receipt.events.LogForGameRentalRequested.returnValues.gameRenter+ " GameOwner "+ receipt.events.LogForGameRentalRequested.returnValues.gameOwnerAddress +" with registerID of "+receipt.events.LogForGameRentalRequested.returnValues.registerId)
+    gameStatus.innerHTML = ("successful. GameRenter "+ receipt.events.LogForGameRentalRequested.returnValues.gameRenter+ " GameOwner "+ receipt.events.LogForGameRentalRequested.returnValues.gameOwnerAddress +" with registerID of "+receipt.events.LogForGameRentalRequested.returnValues.registerId)
   }
   );
 
 
 
+ssShipGameToRenter.onclick = async () => {
+  const trackingId = document.getElementById
+}
+
+
+  shipGamebutton
   
 }
 }
