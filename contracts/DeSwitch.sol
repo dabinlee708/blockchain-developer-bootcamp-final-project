@@ -11,6 +11,8 @@ contract DeSwitch {
   event LogForGameReceivedByRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameShippedToOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameReceivedByOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
+  event LogForPendingBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
+  event LogForConfirmedBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
   enum gameState {
     Invalid,
     Available,
@@ -35,6 +37,8 @@ contract DeSwitch {
   
   mapping (address => Game) public games;
   mapping (uint => address) public registerIdList;
+  mapping (address => uint) public pendingBalances;
+  mapping (address => uint) public confirmedBalances;
 
   // mapping (uint => Game) public games;
   uint registerId = 0 ;
@@ -44,7 +48,7 @@ contract DeSwitch {
   }
   
   modifier notGameOwner(uint _trackingId) {
-    require(games[registerIdList[_trackingId]].gameOwner != msg.sender);
+    require(games[registerIdList[_trackingId]].gameOwner != msg.sender, "Only non-owners can perform this action");
     // require(games[registerIdList[_trackingId]].gameOwner != msg.sender);
     _;
   }
@@ -70,18 +74,22 @@ contract DeSwitch {
   }
   
   modifier isReservedGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.Reserved);
+    require(games[registerIdList[_trackingId]].state == gameState.Reserved, "The game is not in reserved status");
     _;
   }
 
   modifier isRentedGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.Rented);
+    require(games[registerIdList[_trackingId]].state == gameState.Rented,"The game is not in rented status");
     _;
   }
 
   modifier isShippedToOwnerGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.ShippedToOwner);
     _;
+  }
+
+  function queryGameCount() public view returns(uint){
+    return (registerId);
   }
 
   function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(uint, uint){
@@ -116,38 +124,30 @@ contract DeSwitch {
     return (1, registerId);
   }
 
-  function queryGameStatus(uint _registerId) public view returns(string memory){
-    // function queryGameStatus(uint _registerId) public view returns(gameState){
-    // Game[] memory gameList = new Game[](registerId);
-    // for (uint i = 0; i < registerId; i++){
-      
-    //   gameList[i] = games[registerIdList[0]];
-    // }
-    // return gameList;
-
-
-    // Available,
-    // Shipped,
-    // Rented,
-    // Sold
-     // Loop through possible options
-    if (games[registerIdList[_registerId]].state == gameState.Invalid) return "Invalid";
-    if (games[registerIdList[_registerId]].state == gameState.Available) return "Available";
-    if (games[registerIdList[_registerId]].state == gameState.Reserved) return "Reserved";
-    if (games[registerIdList[_registerId]].state == gameState.ShippedToRenter) return "ShippedToRenter";
-    if (games[registerIdList[_registerId]].state == gameState.Rented) return "Rented";
-    if (games[registerIdList[_registerId]].state == gameState.ShippedToOwner) return "ShippedToOwner";
-    if (games[registerIdList[_registerId]].state == gameState.RentalCompleted) return "RentalCompleted";
-    // else return "Invalid";
+  function queryGameStatusbyTI(uint _trackingId) public view returns(string memory){
+    if (games[registerIdList[_trackingId]].state == gameState.Invalid) return "Invalid";
+    if (games[registerIdList[_trackingId]].state == gameState.Available) return "Available";
+    if (games[registerIdList[_trackingId]].state == gameState.Reserved) return "Reserved";
+    if (games[registerIdList[_trackingId]].state == gameState.ShippedToRenter) return "ShippedToRenter";
+    if (games[registerIdList[_trackingId]].state == gameState.Rented) return "Rented";
+    if (games[registerIdList[_trackingId]].state == gameState.ShippedToOwner) return "ShippedToOwner";
+    if (games[registerIdList[_trackingId]].state == gameState.RentalCompleted) return "RentalCompleted";
     return "Invalid";
+  }
 
-    // Invalid,
-    // Available,
-    // Reserved,
-    // ShippedToRenter,
-    // Rented,
-    // ShippedToOwner,
-    // RentalCompleted
+  function queryBalance(address _address) public view returns(uint, uint){
+    require(msg.sender == _address);
+    if (pendingBalances[_address] != 0 && confirmedBalances[_address] != 0){
+      // return (pendingBalances[_address], confirmedBalances[_address]);
+      return (1,1);
+    }else{
+      return (0,0);
+    }
+  }
+
+  function queryGamePricebyTI(uint _trackingId) public view returns(uint, uint){
+    //check if the game ID is valid
+    return (games[registerIdList[_trackingId]].rentalRate, games[registerIdList[_trackingId]].depositRequired);
   }
 
   function rentGame(uint _trackingId) public payable notGameOwner(_trackingId) isAvailableGame(_trackingId) returns(string memory) {
@@ -165,17 +165,13 @@ contract DeSwitch {
     //Emit event
     // event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
     emit LogForGameRentalRequested(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    
+    pendingBalances[msg.sender] += msg.value;
+    emit LogForPendingBalanceIncrease(msg.sender, msg.value, pendingBalances[msg.sender]);
     return "successfully rented";
   }
 
-  // function buyGame(uint trackingId) public payable returns(bool){
-  //   //should be "payable" as this requires ether to be transffered to the contract
-  //   //should be "public" as anyone should be able to buy the game 
-  //   //Verify the state of trackingId to be either "Available" using a modifier
-  //   //return true or false if the rentGame attempt was successful
-  //   //check if msg.value == games[trackingId].sellRate
-  //   //at the end of this function the state of the Game should be set to "TransactionInProgress"
-  // }
+
 
   function shipGame(uint _trackingId) public isGameOwner(_trackingId) isReservedGame(_trackingId) returns(string memory){
     //To be called by the gameOwner to account for state update to "Shipped"

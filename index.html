@@ -9,9 +9,14 @@
     </head>
 <body>
     <h1>Welcome to Decentralized Switch Game Exchange</h1>
+    <span id=currentRegisteredGameCount></span>
+
     <h2>Connect Wallet</h2>
     <div id='mm-detected'></div>
     <button id="mm-connect">Connect to Meta Mask</button>
+    <button id="checkBalance">Check Balance</button>
+    <span id="pendingBalance"></span>
+    <span id="confirmedBalance"></span>
     <div id='mm-current-account'></div>
     
     <h2>Register Game</h2>
@@ -67,28 +72,27 @@
         <option value=49>Wonder Boy: The Dragons Trap</option>
         <option value=50>Nights of Azure 2: Bride of the New Moon</option>
     </select>
-    <!-- <input id="gameid" type="number" placeholder="gameid"/> -->
-    <input id="rentalRate" type="number" placeholder="Rental Rate/day in ETH"/>
-    <input id="depositRate" type="number" placeholder="Deposit Amount"/>
+
+    <input id="rentalRate" type="number" placeholder="Rental Rate/day in wei"/>
+    <input id="depositRate" type="number" placeholder="Deposit Amount in wei"/>
     <button id="registerGame">Register Game</button>
     <br>
-    <span>Game Registration with tracking ID </span>
+    
     <span id="createdTrackingId" type="number"></span>
-    <span id="creationSuccess">-</span>
+    <span id="creationText"></span>
    
     <h2>Tracking ID</h2>
     <input id="trackingId" type="number" placeholder="Tracking ID"/>
     <br>
     <span id="updateText">Pending Action</span>
     <br>
-    <button id="queryGame">Query Game Register ID</button>
-    <br>
+    <button id="queryGame">Query Game Info</button>
+    <!-- <br> -->
     <button id="rentGame">Rent Game</button>
-    
-    <br>
+    <!-- <br> -->
     <button id="shipGameToRenter">Ship to Renter</button>
-    <button id="shipGameToOwner">Ship to Owner</button>
-    <br>
+    <button id="returnGameToOwner">Return Game to Owner</button>
+    <!-- <br> -->
     <button id="receiveGameFromOwner">Receive from Owner</button>
     <button id="receiveGameFromRenter">Receive from Renter</button>
     <script src="DeSwitch.js"></script>
