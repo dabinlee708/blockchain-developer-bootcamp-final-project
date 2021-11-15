@@ -3,7 +3,9 @@ pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 
-
+/// @title Decentralized Switch Game Rental Platform
+/// @author Dabin Lee
+/// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
 contract DeSwitch {
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
@@ -24,6 +26,14 @@ contract DeSwitch {
   }
 
   struct Game{
+    /// @param gameid is unique game ID assiged by Nintendo upon release of a game Title
+    /// @param gregisterId is a unique reference number assigned during game registration
+    /// @param rentalRate is rental rate in wei, charged per day
+    /// @param depositRequired is the deposit required in wei, to be used to offset rental charges upon successful completion of rental
+    /// @param gameOwner is the payable wallet address of the game owner where the rental charges will be transferred to
+    /// @param state is an enum gameState which describes the state of a unqiue game such as "Available" or "Rented"
+    /// @param timeRentalStart is a uint value which logs down when the rental was started to calculate the rental charges upon completion of rental
+    /// @param gameRenter is the payable wallet address of the game renter where the deposit minus rental charges will be transferred to
     uint gameid;
     uint gregisterId;
     uint rentalRate;
@@ -41,33 +51,39 @@ contract DeSwitch {
   mapping (address => uint) public confirmedBalances;
 
   // mapping (uint => Game) public games;
+
+  /// @param registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
   uint registerId = 0 ;
 
   
-    constructor() public {
+  constructor() public {
   }
   
+  /// @notice notGameOwner modifier requires the function to be by a person other than the game owner. (Example - to prevent game owner from renting his/her own game by mistake)
   modifier notGameOwner(uint _trackingId) {
     require(games[registerIdList[_trackingId]].gameOwner != msg.sender, "Only non-owners can perform this action");
-    // require(games[registerIdList[_trackingId]].gameOwner != msg.sender);
     _;
   }
 
+  /// @notice isGameOwner modifier validates if the function is being called by the game owner. (Example - calling functions such as "shipGame")
   modifier isGameOwner(uint _trackingId) {
     require(games[registerIdList[_trackingId]].gameOwner == msg.sender);
     _;
   }
 
+  /// @notice isGameRenter modifier validates if the function is being called by the game renter. (Example - calling functions such as "gameReceived")
   modifier isGameRenter(uint _trackingId) {
     require(games[registerIdList[_trackingId]].gameRenter == msg.sender);
     _;
   }
 
+  /// @notice isAvailableGame modifier validates if the game with tracking ID of _trackingId has state set to "Available"
   modifier isAvailableGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.Available);
     _;
   }
 
+  /// @notice isShippedToRenterGame modifier validates if the game with tracking ID of _trackingId has state set to "shippedToRenter"
   modifier isShippedToRenterGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.ShippedToRenter);
     _;
@@ -136,7 +152,7 @@ contract DeSwitch {
   }
 
   function queryBalance(address _address) public view returns(uint, uint){
-    require(msg.sender == _address);
+    // require(msg.sender == _address);
     if (pendingBalances[_address] != 0 && confirmedBalances[_address] != 0){
       // return (pendingBalances[_address], confirmedBalances[_address]);
       return (1,1);
