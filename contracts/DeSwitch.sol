@@ -89,25 +89,33 @@ contract DeSwitch {
     _;
   }
   
+  /// @notice isReservedGame modifier validates if the game with the tracking ID of _trackingId has state set to "Reserved"
   modifier isReservedGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.Reserved, "The game is not in reserved status");
     _;
   }
 
+  /// @notice isRentedGame modifer validates if the game with the tracking ID of _trackignId has state set to "Rented"
   modifier isRentedGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.Rented,"The game is not in rented status");
     _;
   }
 
+  /// @notice isShippedToOwnerGame modifer validates if the game with the tracking ID of _trackingId has state set to "ShippedToOwner"
   modifier isShippedToOwnerGame(uint _trackingId){
     require(games[registerIdList[_trackingId]].state == gameState.ShippedToOwner);
     _;
   }
 
+  /// @notice queryGameCount is a publi view function which returns current value of registerId, which equals the # of registered games in the smart contract
   function queryGameCount() public view returns(uint){
     return (registerId);
   }
 
+  /// @notice registerGame
+  /// @param _gameId takes in the game registration ID according to http://nswdb.com/
+  /// @param _rentalRate takes in the rental charges per day in wei
+  /// @param _depositRequired takes in the deposit charge for the whole game in wei
   function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(uint, uint){
     //should be a public function as anyone should be able to put their game for sale/rental
     //Users register games they own (Ex. Switch Games) as "Available"
