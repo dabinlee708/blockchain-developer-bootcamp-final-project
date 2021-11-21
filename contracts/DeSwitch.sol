@@ -3,18 +3,18 @@ pragma solidity >=0.4.22 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 /// @title Decentralized Switch Game Rental Platform
 /// @author Dabin Lee
 /// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
 contract DeSwitch {
 
-  AggregatorV3Interface internal priceFeed;
+//   AggregatorV3Interface internal priceFeed;
 
-  constructor() {
-    priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
-}
+//   constructor() {
+//     priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
+// }
 
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
@@ -68,7 +68,6 @@ contract DeSwitch {
   constructor() public {
   }
   
-
   
   /// @notice notGameOwner modifier requires the function to be by a person other than the game owner. (Example - to prevent game owner from renting his/her own game by mistake)
   modifier notGameOwner(uint _trackingId) {
@@ -237,28 +236,6 @@ contract DeSwitch {
   }
 
   function receiveGameOwner(uint _trackingId) public isGameOwner(_trackingId) isShippedToOwnerGame(_trackingId) returns(string memory){
-    (
-      uint80 roundID, 
-      int price,
-      uint startedAt,
-      uint timeStamp,
-      uint80 answeredInRound
-    ) = priceFeed.latestRoundData();
-
-  
-    // return (price,);
-
-  function getLatestPrice() public view returns (int) {
-    (
-        uint80 roundID, 
-        int price,
-        uint startedAt,
-        uint timeStamp,
-        uint80 answeredInRound
-    ) = priceFeed.latestRoundData();
-    return price;
-  }  
-
     //To be called by the gameOwner to account for state change when the game is returned by the renter.
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
@@ -266,6 +243,17 @@ contract DeSwitch {
     emit LogForGameReceivedByOwner(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
     return "The owner successfully received the game. Rental is complete.";
   }
+
+//   function getLatestPrice() public view returns (int) {
+//     (
+//         uint80 roundID, 
+//         int price,
+//         uint startedAt,
+//         uint timeStamp,
+//         uint80 answeredInRound
+//     ) = priceFeed.latestRoundData();
+//     return price;
+// }
 
 
 }
