@@ -54,8 +54,8 @@ contract DeSwitch {
   }
 
   
-  mapping (address => Game) public games;
-  mapping (uint => address) public registerIdList;
+  mapping (uint => Game) public games;
+  // mapping (uint => address) public registerIdList;
   mapping (address => uint) public pendingBalances;
   mapping (address => uint) public confirmedBalances;
 
@@ -71,49 +71,49 @@ contract DeSwitch {
   
   /// @notice notGameOwner modifier requires the function to be by a person other than the game owner. (Example - to prevent game owner from renting his/her own game by mistake)
   modifier notGameOwner(uint _trackingId) {
-    require(games[registerIdList[_trackingId]].gameOwner != msg.sender, "Only non-owners can perform this action");
+    require(games[_trackingId].gameOwner != msg.sender, "Only non-owners can perform this action");
     _;
   }
 
   /// @notice isGameOwner modifier validates if the function is being called by the game owner. (Example - calling functions such as "shipGame")
   modifier isGameOwner(uint _trackingId) {
-    require(games[registerIdList[_trackingId]].gameOwner == msg.sender);
+    require(games[_trackingId].gameOwner == msg.sender, "Only game owners can perform this action");
     _;
   }
 
   /// @notice isGameRenter modifier validates if the function is being called by the game renter. (Example - calling functions such as "gameReceived")
   modifier isGameRenter(uint _trackingId) {
-    require(games[registerIdList[_trackingId]].gameRenter == msg.sender);
+    require(games[_trackingId].gameRenter == msg.sender, "Only game renters can perform this action");
     _;
   }
 
   /// @notice isAvailableGame modifier validates if the game with tracking ID of _trackingId has state set to "Available"
   modifier isAvailableGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.Available);
+    require(games[_trackingId].state == gameState.Available, "This action can only be done to a game with 'Available' status");
     _;
   }
 
   /// @notice isShippedToRenterGame modifier validates if the game with tracking ID of _trackingId has state set to "shippedToRenter"
   modifier isShippedToRenterGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.ShippedToRenter);
+    require(games[_trackingId].state == gameState.ShippedToRenter, "This action can only be done to a game in 'ShippedToRenter' status");
     _;
   }
   
   /// @notice isReservedGame modifier validates if the game with the tracking ID of _trackingId has state set to "Reserved"
   modifier isReservedGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.Reserved, "The game is not in reserved status");
+    require(games[_trackingId].state == gameState.Reserved, "This action can only be done to a game in 'Reserved' status");
     _;
   }
 
   /// @notice isRentedGame modifer validates if the game with the tracking ID of _trackignId has state set to "Rented"
   modifier isRentedGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.Rented,"The game is not in rented status");
+    require(games[_trackingId].state == gameState.Rented,"This action can only be done to a game in 'Rented' status");
     _;
   }
 
   /// @notice isShippedToOwnerGame modifer validates if the game with the tracking ID of _trackingId has state set to "ShippedToOwner"
   modifier isShippedToOwnerGame(uint _trackingId){
-    require(games[registerIdList[_trackingId]].state == gameState.ShippedToOwner);
+    require(games[_trackingId].state == gameState.ShippedToOwner, "This action can only be done to game in 'ShippedToOwner' status");
     _;
   }
 
@@ -139,7 +139,7 @@ contract DeSwitch {
     //Consider hashing/randomizing instead of incremental values, can consider sha256(msg.sender+registerID)
     registerId += 1;
     //Create a Game struct with the provided values and add it to the address -> game mapping
-    games[msg.sender] = Game({
+    games[registerId] = Game({
       gameid : _gameId,
       gregisterId : registerId,
       rentalRate : _rentalRate,
@@ -151,21 +151,21 @@ contract DeSwitch {
     });
 
     //add to the mapping registerId -> Owner Address
-    registerIdList[registerId] = msg.sender;
+    // registerIdList[registerId] = msg.sender;
 
     //Emits appropriate event to log the chagnes 
     emit LogForGameRegistered(_gameId, registerId, msg.sender, _rentalRate, _depositRequired);
-    return (1, registerId);
+    return (_gameId, registerId);
   }
 
   function queryGameStatusbyTI(uint _trackingId) public view returns(string memory){
-    if (games[registerIdList[_trackingId]].state == gameState.Invalid) return "Invalid";
-    if (games[registerIdList[_trackingId]].state == gameState.Available) return "Available";
-    if (games[registerIdList[_trackingId]].state == gameState.Reserved) return "Reserved";
-    if (games[registerIdList[_trackingId]].state == gameState.ShippedToRenter) return "ShippedToRenter";
-    if (games[registerIdList[_trackingId]].state == gameState.Rented) return "Rented";
-    if (games[registerIdList[_trackingId]].state == gameState.ShippedToOwner) return "ShippedToOwner";
-    if (games[registerIdList[_trackingId]].state == gameState.RentalCompleted) return "RentalCompleted";
+    if (games[_trackingId].state == gameState.Invalid) return "Invalid";
+    if (games[_trackingId].state == gameState.Available) return "Available";
+    if (games[_trackingId].state == gameState.Reserved) return "Reserved";
+    if (games[_trackingId].state == gameState.ShippedToRenter) return "ShippedToRenter";
+    if (games[_trackingId].state == gameState.Rented) return "Rented";
+    if (games[_trackingId].state == gameState.ShippedToOwner) return "ShippedToOwner";
+    if (games[_trackingId].state == gameState.RentalCompleted) return "RentalCompleted";
     return "Invalid";
   }
 
@@ -181,7 +181,7 @@ contract DeSwitch {
 
   function queryGamePricebyTI(uint _trackingId) public view returns(uint, uint){
     //check if the game ID is valid
-    return (games[registerIdList[_trackingId]].rentalRate, games[registerIdList[_trackingId]].depositRequired);
+    return (games[_trackingId].rentalRate, games[_trackingId].depositRequired);
   }
 
   function rentGame(uint _trackingId) public payable notGameOwner(_trackingId) isAvailableGame(_trackingId) returns(string memory) {
@@ -192,13 +192,13 @@ contract DeSwitch {
     //check if msg.value == games[trackingId].rentalRate
     //at the end of this function the state of the Game should be set to "TransactionInProgress"
     
-    games[registerIdList[_trackingId]].state = gameState.Reserved;
-    games[registerIdList[_trackingId]].gameRenter = msg.sender;
+    games[_trackingId].state = gameState.Reserved;
+    games[_trackingId].gameRenter = msg.sender;
     // games[registerIdList[_trackignId]]
 
     //Emit event
     // event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
-    emit LogForGameRentalRequested(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    emit LogForGameRentalRequested(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     
     pendingBalances[msg.sender] += msg.value;
     emit LogForPendingBalanceIncrease(msg.sender, msg.value, pendingBalances[msg.sender]);
@@ -211,8 +211,8 @@ contract DeSwitch {
     //To be called by the gameOwner to account for state update to "Shipped"
     //Only the gameOwner with same account address as games[trackingId].gameOnwer can execute this function
     //Require the games[trackingId].state to be "AvailableForRent" or "AvailableForBuy"
-    games[registerIdList[_trackingId]].state = gameState.ShippedToRenter;
-    emit LogForGameShippedToRenter(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    games[_trackingId].state = gameState.ShippedToRenter;
+    emit LogForGameShippedToRenter(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     return "successfully shipped reserved game!";
 
   } 
@@ -221,8 +221,8 @@ contract DeSwitch {
     //To be called by the gameBuyer or gameRenter to account for state change to "Rented" or "Sold"
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
-    games[registerIdList[_trackingId]].state = gameState.Rented;
-    emit LogForGameReceivedByRenter(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    games[_trackingId].state = gameState.Rented;
+    emit LogForGameReceivedByRenter(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     return "successfully received the rented game!";
   }
 
@@ -230,8 +230,8 @@ contract DeSwitch {
     //To be called buy the owner once the game has returned in good condition.
     //This function returns the deposit (Totaldeposit - rental fee) from the smart Contract to the renter
     //To trigger payment function to the gameOwner for the rental fee
-    games[registerIdList[_trackingId]].state = gameState.ShippedToOwner;
-    emit LogForGameShippedToOwner(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    games[_trackingId].state = gameState.ShippedToOwner;
+    emit LogForGameShippedToOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     return "successfully shipped the rented game back to owner!";
   }
 
@@ -239,21 +239,11 @@ contract DeSwitch {
     //To be called by the gameOwner to account for state change when the game is returned by the renter.
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
-    games[registerIdList[_trackingId]].state = gameState.RentalCompleted;
-    emit LogForGameReceivedByOwner(games[registerIdList[_trackingId]].gameid, games[registerIdList[_trackingId]].gregisterId, games[registerIdList[_trackingId]].gameRenter, games[registerIdList[_trackingId]].gameOwner);
+    games[_trackingId].state = gameState.RentalCompleted;
+    emit LogForGameReceivedByOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     return "The owner successfully received the game. Rental is complete.";
   }
 
-//   function getLatestPrice() public view returns (int) {
-//     (
-//         uint80 roundID, 
-//         int price,
-//         uint startedAt,
-//         uint timeStamp,
-//         uint80 answeredInRound
-//     ) = priceFeed.latestRoundData();
-//     return price;
-// }
-
+  
 
 }

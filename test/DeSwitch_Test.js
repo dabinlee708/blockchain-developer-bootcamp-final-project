@@ -1,164 +1,280 @@
-
 // const { catchRevert } = require("./exceptionsHelpers.js");
 var DeSwtich = artifacts.require("./DeSwitch.sol");
+const assert = require("chai").assert;
+const truffleAssert = require('truffle-assertions');
 
 contract("DeSwtich", function (accounts) {
-  const [alice, bob] = accounts;
-  const deposit = web3.utils.toBN(2);
+  const [alice, bob, charles, david] = accounts;
+  
 
-  beforeEach(async () => {
+  // Check if the games successfully registered would have "available" status while those not registered will have "Invalid" status
+  it("Check games registered by Alice and Bob return Available status and unregistered tracking ID returns invalid status", async() => {
+    
+    // Fresh instance of DeSwitch Smart Contract. tracking ID will start from 1 for the first registered game
     instance = await DeSwtich.new();
-  });
-
-  it("Register Games", async() => {
-    const eth100 = 100e18;
-    // assert.equal(await web3.eth.registerGame(), eth100.toString());
-    // assert.equal(await web3.eth.getBalance(bob), eth100.toString());
-  });
-
-//   registerGame(uint _gameId, uint _rentalRate, uint _depositRequired)
-
-  it("is owned by owner", async () => {
-    assert.equal(
-      // Hint:
-      //   the error `TypeError: Cannot read property 'call' of undefined`
-      //   will be fixed by setting the correct visibility specifier. See
-      //   the following two links
-      //   1: https://docs.soliditylang.org/en/v0.8.5/cheatsheet.html?highlight=visibility#function-visibility-specifiers
-      //   2: https://docs.soliditylang.org/en/v0.8.5/contracts.html#getter-functions
-      await instance.owner.call(),
-      contractOwner,
-      "owner is not correct",
-    );
-  });
-
-//   it("should mark addresses as enrolled", async () => {
-//     await instance.enroll({ from: alice });
-
-//     const aliceEnrolled = await instance.enrolled(alice, { from: alice });
-//     assert.equal(
-//       aliceEnrolled,
-//       true,
-//       "enroll balance is incorrect, check balance method or constructor",
-//     );
-//   });
-
-//   it("should not mark unenrolled users as enrolled", async () => {
-//     const ownerEnrolled = await instance.enrolled(contractOwner, { from: contractOwner });
-//     assert.equal(
-//       ownerEnrolled,
-//       false,
-//       "only enrolled users should be marked enrolled",
-//     );
-//   });
-
-//   it("should deposit correct amount", async () => {
-//     await instance.enroll({ from: alice });
-//     await instance.deposit({ from: alice, value: deposit });
-//     const balance = await instance.getBalance.call({ from: alice });
-
-//     assert.equal(
-//       deposit.toString(),
-//       balance,
-//       "deposit amount incorrect, check deposit method",
-//     );
-//   });
-
-//   it("should log a deposit event when a deposit is made", async () => {
-//     await instance.enroll({ from: alice });
-//     const result = await instance.deposit({ from: alice, value: deposit });
-
-//     const expectedEventResult = { accountAddress: alice, amount: deposit };
-
-//     const logAccountAddress = result.logs[0].args.accountAddress;
-//     const logDepositAmount = result.logs[0].args.amount.toNumber();
-
-//     assert.equal(
-//       expectedEventResult.accountAddress,
-//       logAccountAddress,
-//       "LogDepositMade event accountAddress property not emitted, check deposit method",
-//     );
-
-//     assert.equal(
-//       expectedEventResult.amount,
-//       logDepositAmount,
-//       "LogDepositMade event amount property not emitted, check deposit method",
-//     );
-//   });
-
-  it("Should successfully register a Game with Alice as the owner", async () => {
-    const initialAmount = 0;
+    
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Alice
     await instance.registerGame(
-        1,
-        500,
-        50000,
-        { from: alice });
-
-    assert.equal(
-      1,
-      1,
-      alice,
-      500,
-      50000
-    );
-  });
-
-  it("Should successfully register a Game with Bob as the owner", async () => {
-    const initialAmount = 0;
+      1, //gameID 1
+      100, //Rental fee of 100 Wei
+      10000, //Deposit fee of 10000wei
+      {from: alice} //from alice
+      );
+    
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Bob
     await instance.registerGame(
-        2,
-        300,
-        45905,
-        { from: bob });
+      1, //gameID 1
+      200, //Rental fee of 200 Wei
+      20000, //Deposit fee of 20000wei
+      {from: bob} //from bob
+      );
 
-    assert.equal(
-      2,
-      2,
-      bob,
-      300,
-      45905
+    // As alice registered the game first, alice's registered game should have the tracking ID of 1 and should have "Available" status
+    assert.equal(await instance.queryGameStatusbyTI(1), "Available", "Game registered by alice is Available");
+
+    // As bob registered the after alice, bob's registered game should have the tracking ID of 2 and should have "Available" status
+    assert.equal(await instance.queryGameStatusbyTI(2), "Available", "Game registered by bob is Available");
+    
+    // As no one registered game after bob, tracking ID 3 would be in "Invalid" status and will be assigned to the next game being registered
+    assert.equal(await instance.queryGameStatusbyTI(3), "Invalid", "Game registered by no one is Invalid");
+  });
+
+  //Check if the games registered can be rented by the owner themselves. Error should be throwing from the modifier notGameOwner
+  it("Check if the owner Alice and Bob can rent their own game", async() => {
+    // Fresh instance of DeSwitch Smart Contract. tracking ID will start from 1 for the first registered game
+    instance = await DeSwtich.new();
+
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Alice
+    await instance.registerGame(
+      1, //gameID 1
+      100, //Rental fee of 100 Wei
+      10000, //Deposit fee of 10000wei
+      {from: alice} //from alice
+      );
+    
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Bob
+    await instance.registerGame(
+      1, //gameID 1
+      200, //Rental fee of 200 Wei
+      20000, //Deposit fee of 20000wei
+      {from: bob} //from bob
+      );
+
+    //Check if the rentGame function revers with correct error message from notGameOwner modifier when alice tries to rent her own game
+    await truffleAssert.reverts(
+
+      //rentGame request for game registered by alice
+      instance.rentGame(
+        1, //tracking ID 1 is a game registered by Alice
+        {from: alice}),//Request sent from alice to verify the revert & error
+
+      //expected error
+      "Only non-owners can perform this action"
+    );
+
+    //Check if the rentGame function revers with correct error message from notGameOwner modifier when bob tries to rent his own game
+    await truffleAssert.reverts(
+
+      //rentGame request for game registered by bob
+      instance.rentGame(
+        2, //tracking ID 2 is a game registered by Alice
+        {from: bob}), //Request sent from alice to verify the revert & error
+
+      //expected error
+      "Only non-owners can perform this action"
+    );
+  });
+
+  //Check if the games registered can be rented by the owner themselves. Error should be throwing from the modifier notGameOwner
+  it("Check if the owner Alice and Bob can rent games which are in 'Invalid' status", async() => {
+    // Fresh instance of DeSwitch Smart Contract. tracking ID will start from 1 for the first registered game
+    instance = await DeSwtich.new();
+
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Alice
+    await instance.registerGame(
+      1, //gameID 1
+      100, //Rental fee of 100 Wei
+      10000, //Deposit fee of 10000wei
+      {from: alice} //from alice
+      );
+    
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Bob
+    await instance.registerGame(
+      1, //gameID 1
+      200, //Rental fee of 200 Wei
+      20000, //Deposit fee of 20000wei
+      {from: bob} //from bob
+      );
+
+    //Check if the rentGame function revers with correct error message from notGameOwner modifier when alice tries to rent her own game
+    await truffleAssert.reverts(
+
+      //rentGame request for game registered by alice
+      instance.rentGame(
+        1, //tracking ID 1 is a game registered by Alice
+        {from: alice}),//Request sent from alice to verify the revert & error
+
+      //expected error
+      "Only non-owners can perform this action"
+    );
+
+    //Check if the rentGame function revers with correct error message from notGameOwner modifier when bob tries to rent his own game
+    await truffleAssert.reverts(
+
+      //rentGame request for game registered by bob
+      instance.rentGame(
+        2, //tracking ID 2 is a game registered by Alice
+        {from: bob}), //Request sent from alice to verify the revert & error
+
+      //expected error
+      "Only non-owners can perform this action"
     );
   });
 
 
 
+  it("Check if the owner Alice and Bob can rent a game that belongs to seomeone else", async() => {
+    // Fresh instance of DeSwitch Smart Contract. tracking ID will start from 1 for the first registered game
+    instance = await DeSwtich.new();
+    
+    //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Alice
+    await instance.registerGame(
+      1, //gameID 1
+      100, //Rental fee of 100 Wei
+      10000, //Deposit fee of 10000wei
+      {from: alice} //from alice
+      );
 
-//   it("should not be able to withdraw more than has been deposited", async () => {
-//     await instance.enroll({ from: alice });
-//     await instance.deposit({ from: alice, value: deposit });
-//     await catchRevert(instance.withdraw(deposit + 1, { from: alice }));
-//   });
+    await instance.rentGame(
+      1, //trackingID 2 (belongs to bob)
+      {from: bob}); //From alice
+      assert.equal(
+        1, //expected - gameID 1
+        1, //expected - tracking ID 1
+        bob,//expected - renter address bob
+        alice //expected - owner address alice
+      );
+     } );
 
-//   it("should emit the appropriate event when a withdrawal is made", async () => {
-//     const initialAmount = 0;
-//     await instance.enroll({ from: alice });
-//     await instance.deposit({ from: alice, value: deposit });
-//     var result = await instance.withdraw(deposit, { from: alice });
 
-//     const accountAddress = result.logs[0].args.accountAddress;
-//     const newBalance = result.logs[0].args.newBalance.toNumber();
-//     const withdrawAmount = result.logs[0].args.withdrawAmount.toNumber();
+  it("Check if the owner Alice and renter Bob can complete a rental cycle", async() => {
+  // Fresh instance of DeSwitch Smart Contract. tracking ID will start from 1 for the first registered game
+  instance = await DeSwtich.new();
+  
+  //Register game with required parameters such as Game ID (game type), Rental Fee (in wei) and Deposit Fee (in wei) from Alice
+  await instance.registerGame(
+    1, //gameID 1
+    100, //Rental fee of 100 Wei
+    10000, //Deposit fee of 10000wei
+    {from: alice} //from alice
+    );
 
-//     const expectedEventResult = {
-//       accountAddress: alice,
-//       newBalance: initialAmount,
-//       withdrawAmount: deposit,
-//     };
+  await instance.rentGame(
+    1, //trackingID 1 (Owned by alice, being rented to bob)
+    {from: bob}); //From alice
+    assert.equal(
+      1, //expected - gameID 1
+      1, //expected - tracking ID 1
+      bob,//expected - renter address bob
+      alice //expected - owner address alice
+    );
 
-//     assert.equal(
-//       expectedEventResult.accountAddress,
-//       accountAddress,
-//       "LogWithdrawal event accountAddress property not emitted, check deposit method",
-//     );
-//     assert.equal(
-//       expectedEventResult.newBalance,
-//       newBalance,
-//       "LogWithdrawal event newBalance property not emitted, check deposit method",
-//     );
-//     assert.equal(
-//       expectedEventResult.withdrawAmount,
-//       withdrawAmount,
-//       "LogWithdrawal event withdrawalAmount property not emitted, check deposit method",
-//     );
-//   });
-});
+  //Attempt to ship the game from Bob should fail as Bob is not the game owner
+  await truffleAssert.reverts(
+
+    //shipGame request for game registered by alice
+    instance.shipGame(
+      1, //tracking ID 1 is a game registered by Alice
+      {from: bob}),//Request sent from bob, which should be rejected
+
+    //expected error
+    "Only game owners can perform this action"
+  );
+
+  await instance.shipGame(
+    1,//trackingID 1 (Owned by alice, being rented to bob and being shipped to bob)
+    {from: alice});//Only alice can ship the game
+  
+  assert.equal(
+    1,//gameID 1
+    1,//tracking ID 1
+    bob,//Renter's address
+    alice//owner's address
+  )
+  
+  //Attempt to receive the game from alice although only bob can receive the game as the renter
+  await truffleAssert.reverts(
+
+    //shipGame request for game registered by alice
+    instance.receiveGameRenter(
+      1, //tracking ID 1 is a game registered by Alice, being rented by bob
+      {from: alice}),//Request sent from alice, which should be rejected
+
+    //expected error
+    "Only game renters can perform this action"
+  );
+
+  //Check if receiveGameRenter can be done successfully, when sent from bob
+  await instance.receiveGameRenter(
+    1,//trackingID 1
+    {from: bob});
+  
+  assert.equal(
+    1,//gameID 1
+    1,//tracking ID 1
+    bob,//Renter's address
+    alice//owner's address
+  )
+
+  
+
+  //Attempt to return the game from alice although only bob can return the game as the renter
+  await truffleAssert.reverts(
+
+    //return request for game registered by alice
+    instance.returnGame(
+      1, //tracking ID 1 is a game registered by Alice, being rented by bob
+      {from: alice}),//Request sent from alice, which should be rejected
+
+    //expected error
+    "Only game renters can perform this action"
+  );
+
+  //Check if returnGame can be done successfully, when sent from bob
+  await instance.returnGame(
+    1,//trackingID 1
+    {from: bob});
+
+  assert.equal(
+    1,//gameID 1
+    1,//tracking ID 1
+    bob,//Renter's address
+    alice//owner's address
+  )
+
+  //Attempt to receive the returned game from alice although only bob can return the game as the renter
+  await truffleAssert.reverts(
+
+    //receiveGameOwner request for game registered by alice
+    instance.receiveGameOwner(
+      1, //tracking ID 1 is a game registered by Alice, being rented by bob
+      {from: bob}),//Request sent from bob, which should be rejected
+
+    //expected error
+    "Only game owners can perform this action"
+  );
+
+  //Check if receiveGameOwner can be done successfully, when sent from alice
+  await instance.receiveGameOwner(
+    1,//trackingID 1
+    {from: alice});
+
+  assert.equal(
+    1,//gameID 1
+    1,//tracking ID 1
+    bob,//Renter's address
+    alice//owner's address
+  )});
+ 
+     
+})

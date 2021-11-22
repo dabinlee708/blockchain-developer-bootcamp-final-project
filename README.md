@@ -16,3 +16,10 @@ Decentralized Game Rental
 5. Whenever disputes happen, history of rental can be easily verified and tracked down. Good standing history of a particular user could be used to incetivizes the user with lower rental fees since the risk is low as well for the game owner.
 6. Upon completion of rental, via smart contract, deposit can be returned immediately after deducting the rental cost.
 7. With public access to the chain, anyone can look up on the rental statistics and make informed decisions if they want to buy/sell/rent/borrow game titles depending on the market demand.
+
+
+Instructions
+1. git clone 
+2. Install dependencies
+ npm install chai truffle-assertions
+ 
