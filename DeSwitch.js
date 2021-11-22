@@ -645,7 +645,7 @@ var web3 = new Web3(window.ethereum);
 const deSwitch = new web3.eth.Contract(ssABI, ssAddress);
 deSwitch.setProvider(window.ethereum);
 deSwitch.methods.queryGameCount().call((err, result) => {
-  console.log(result);
+  // console.log(result);
   currentRegisteredGameCount.innerHTML = (
     "Currently, there are "+
     result+
