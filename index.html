@@ -9,14 +9,16 @@
     </head>
 <body>
     <h1>Welcome to Decentralized Switch Game Exchange</h1>
-    <!-- <span>Currently, there are </span> -->
     <span id=currentRegisteredGameCount></span>
-    <!-- <span> registered games</span> -->
 
     <h2>Connect Wallet</h2>
     <div id='mm-detected'></div>
     <button id="mm-connect">Connect to Meta Mask</button>
+    <br>
+    <input id="WithdrawBalanceAmount" type="number" placeholder="Amount to withdraw"/>
     <button id="checkBalance">Check Balance</button>
+    <button id="withdrawBalance">Withdraw Confirmed Balance</button>
+    <br>
     <span id="pendingBalance"></span>
     <span id="confirmedBalance"></span>
     <div id='mm-current-account'></div>
@@ -83,19 +85,22 @@
     <span id="createdTrackingId" type="number"></span>
     <span id="creationText"></span>
    
-    <h2>Tracking ID</h2>
-    <input id="trackingId" type="number" placeholder="Tracking ID"/>
+    <h2>Renter's Zone</h2>
+    <input id="trackingIdRZ" type="number" placeholder="Tracking ID"/>
     <br>
-    <span id="updateText">Pending Action</span>
+    <span id="updateTextRZ">Pending Action</span>
     <br>
-    <button id="queryGame">Query Game Info</button>
-    <!-- <br> -->
-    <button id="rentGame">Rent Game</button>
-    <!-- <br> -->
+    <button id="queryGameRZ">Query Game Info</button>
+    <button id="rentGameRZ">Rent Game</button>
+    <button id="receiveGameFromOwnerRZ">Receive from Owner</button>
+    <button id="returnGameToOwnerRZ">Return Game to Owner</button>
+
+    <h2>Owner's Zone</h2>
+    <input id="trackingIdOZ" type="number" placeholder="Tracking ID"/>
+    <br>
+    <span id="updateTextRZ">Pending Action</span>
+    <br>
     <button id="shipGameToRenter">Ship to Renter</button>
-    <button id="returnGameToOwner">Return Game to Owner</button>
-    <!-- <br> -->
-    <button id="receiveGameFromOwner">Receive from Owner</button>
     <button id="receiveGameFromRenter">Receive from Renter</button>
     <script src="DeSwitch.js"></script>
 </body>

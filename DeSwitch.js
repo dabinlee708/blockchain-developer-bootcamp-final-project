@@ -624,17 +624,18 @@ metamaskEnable.onclick = async () => {
 
 //declare buttons that call JS that sends queries or transactions
 const registerGame = document.getElementById("registerGame");
-const queryGame = document.getElementById("queryGame");
-const rentGame = document.getElementById("rentGame");
+const queryGame = document.getElementById("queryGameRZ");
+const rentGame = document.getElementById("rentGameRZ");
 const shipGameToRenter = document.getElementById("shipGameToRenter");
-const returnGameToOwner = document.getElementById("returnGameToOwner");
+const returnGameToOwner = document.getElementById("returnGameToOwnerRZ");
 const receiveGameFromRenter = document.getElementById("receiveGameFromRenter");
-const receiveGameFromOwner = document.getElementById("receiveGameFromOwner");
+const receiveGameFromOwner = document.getElementById("receiveGameFromOwnerRZ");
 const currentGameCount = document.getElementById("currentRegisteredGameCount");
 const queryBalance = document.getElementById("checkBalance");
 
 //declare user input fields
-const gameStatus = document.getElementById("updateText");
+const gameStatusRZ = document.getElementById("updateTextRZ");
+const gameStatusOZ = document.getElementById("updateTextOZ");
 
 //updateReturnValues
 const registerResult = document.getElementById("creationText");
@@ -668,7 +669,7 @@ queryBalance.onclick = async () => {
   });
 }
 
-
+//event fired upon clicking "Register Game" button from the browser
 registerGame.onclick = async () => {
   const gameid = document.getElementById("queryGameRegisterId").value;
   const rentalRate = document.getElementById("rentalRate").value;
@@ -676,26 +677,27 @@ registerGame.onclick = async () => {
   console.log(gameid, rentalRate, depositRate);
  
   await deSwitch.methods.registerGame(gameid, rentalRate, depositRate).send({from: ethereum.selectedAddress}).on('receipt', function(receipt){
-     
+    
+    //Update User with the game ID and register ID based on the receipt
     registerResult.innerHTML = (
       "Registration was successful for game ID "+ 
       gameid + 
       " and the registration number is "+
       receipt.events.LogForGameRegistered.returnValues.registerId
-      )
-    // console.log(receipt.events.LogForGameRegistered.returnValues.registerId);
+      );
+    
+    //After registering, update the current number of registered games to display current status to the user
+    currentRegisteredGameCount.innerHTML = (
+        "Currently, there are "+
+        receipt.events.LogForGameRegistered.returnValues.registerId+
+        " games registered"
+      );
     }
-  
-)
-  //After registering, update the current number of registered games to display current status to the user
-  deSwitch.methods.queryGameCount().call((err, result) => {
-  console.log(result);
-  currentRegisteredGameCount.innerHTML = result;
-  });
+  )  
 }
 
 queryGame.onclick = async () => {
-  const queryTrackingId = document.getElementById("trackingId").value;
+  const queryTrackingId = document.getElementById("trackingIdRZ").value;
   var tempStatus;
   var tempDeposit;
   var tempRental;
@@ -707,9 +709,9 @@ queryGame.onclick = async () => {
   deSwitch.methods.queryGamePricebyTI(queryTrackingId).call((err,result) =>{
     tempDeposit = result[1];
     tempRental = result[0];
-    gameStatus.innerHTML = (
+    gameStatusRZ.innerHTML = (
       "Queried game with tracking ID "+
-      trackingId.value+
+      queryTrackingId.value+
       " is "+
       tempStatus+
       ". Deposit is "+
@@ -722,7 +724,7 @@ queryGame.onclick = async () => {
 }
 
 rentGame.onclick = async ()=> {
-  const rentGameId = document.getElementById("trackingId").value;
+  const rentGameId = document.getElementById("trackingIdRZ").value;
   console.log("Rental Requested");
   var tempDeposit = 0;
 
@@ -744,7 +746,7 @@ rentGame.onclick = async ()=> {
     // console.log("gameOwnerAddress",returnValues.gameOwnerAddress);
     // console.log("gameRenter",returnValues.gameRenter);
     // console.log("registerId",returnValues.registerId);
-    gameStatus.innerHTML = (
+    gameStatusRZ.innerHTML = (
       "successful. GameRenter "+ 
       returnValues.gameRenter+
       " GameOwner "+ 
@@ -758,7 +760,7 @@ rentGame.onclick = async ()=> {
 
 
 shipGameToRenter.onclick = async ()=>{
-  const shipGameId = document.getElementById("trackingId").value;
+  const shipGameId = document.getElementById("trackingIdOZ").value;
   console.log("Shipping confirmed");
 
   await deSwitch.methods.shipGame(shipGameId).send({
@@ -766,7 +768,7 @@ shipGameToRenter.onclick = async ()=>{
   }).on('receipt', function(receipt){
     const returnValues = receipt.events.LogForGameShippedToRenter.returnValues;
     console.log(returnValues);
-    gameStatus.innerHTML = (
+    gameStatusOZ.innerHTML = (
       "successful. Game was shipped out to "+ 
       returnValues.gameRenter+ 
       "  from GameOwner "+ 
@@ -780,7 +782,7 @@ shipGameToRenter.onclick = async ()=>{
 }
 
 receiveGameFromOwner.onclick = async ()=>{
-  const receiveGameId = document.getElementById("trackingId").value;
+  const receiveGameId = document.getElementById("trackingIdRZ").value;
   console.log("Game received by Renter");
 
   await deSwitch.methods.receiveGameRenter(receiveGameId).send({
@@ -788,7 +790,7 @@ receiveGameFromOwner.onclick = async ()=>{
   }).on('receipt', function(receipt){
     const returnValues = receipt.events.LogForGameReceivedByRenter.returnValues;
     console.log(returnValues);
-    gameStatus.innerHTML = (
+    gameStatusRZ.innerHTML = (
       "Game successfully received for tracking ID "+
       receiveGameId
     ).on('error', console.error);
@@ -796,7 +798,7 @@ receiveGameFromOwner.onclick = async ()=>{
 }
 
 returnGameToOwner.onclick = async ()=>{
-  const shipGameId = document.getElementById("trackingId").value;
+  const shipGameId = document.getElementById("trackingIdRZ").value;
   console.log("Game Shipped to Onwer");
 
   await deSwitch.methods.returnGame(shipGameId).send({
@@ -804,7 +806,7 @@ returnGameToOwner.onclick = async ()=>{
   }).on('receipt', function(receipt){
     const returnValues = receipt.events.LogForGameShippedToOwner.returnValues;
     console.log(returnValues);
-    gameStatus.innerHTML = (
+    gameStatusRZ.innerHTML = (
       "Game with "+
       shipGameId+
       " is being shipped back to the onwer for tracking ID"
@@ -813,7 +815,7 @@ returnGameToOwner.onclick = async ()=>{
 }
 
 receiveGameFromRenter.onclick = async ()=>{
-  const receiveGameId = document.getElementById("trackingId").value;
+  const receiveGameId = document.getElementById("trackingIdOZ").value;
   console.log("Game returned successfully to the onwer");
 
   await deSwitch.methods.receiveGameOwner(receiveGameId).send({
@@ -823,7 +825,7 @@ receiveGameFromRenter.onclick = async ()=>{
 
     console.log(returnValues);
 
-    gameStatus.innerHTML = (
+    gameStatusOZ.innerHTML = (
       "Game returned successfully to the onwer for tracking ID "+
       receiveGameId+
       " and the deposit of "+

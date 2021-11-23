@@ -19217,11 +19217,12 @@
       "events": {},
       "links": {},
       "address": "0x61B28a04c63961BfCdb2169967D45E94d0e4c2EB",
-      "transactionHash": "0xa73cb86bbe1b4f6dca39ef1153ce8f9d52c38e73e5a907ac20ed36f9a17d8363"
+      "transactionHash": "0xed4635ad1f8c8818a59814e976b11c7f4b5f69d8fb6cba7e5a1c11707b0071b0"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-22T16:36:34.846Z",
+  "updatedAt": "2021-11-23T15:00:38.726Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Dabin Lee",
     "methods": {
