@@ -1,20 +1,24 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 
-// import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 /// @title Decentralized Switch Game Rental Platform
 /// @author Dabin Lee
 /// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
 contract DeSwitch {
 
-//   AggregatorV3Interface internal priceFeed;
+  AggregatorV3Interface internal priceFeed;
 
-//   constructor() {
-//     priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
-// }
+  constructor() {
+    priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
+}
+
+  
+  // constructor() public {
+  // }
 
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
@@ -61,12 +65,10 @@ contract DeSwitch {
 
   // mapping (uint => Game) public games;
 
-  /// @param registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
+  /// @notice registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
   uint registerId = 0 ;
 
-  
-  constructor() public {
-  }
+
   
   
   /// @notice notGameOwner modifier requires the function to be by a person other than the game owner. (Example - to prevent game owner from renting his/her own game by mistake)
@@ -122,6 +124,17 @@ contract DeSwitch {
     return (registerId);
   }
 
+  function getLatestPrice() public view returns (int) {
+    (
+        uint80 roundID, 
+        int price,
+        uint startedAt,
+        uint timeStamp,
+        uint80 answeredInRound
+    ) = priceFeed.latestRoundData();
+    return price;
+}
+  
   /// @notice registerGame
   /// @param _gameId takes in the game registration ID according to http://nswdb.com/
   /// @param _rentalRate takes in the rental charges per day in wei
@@ -144,10 +157,10 @@ contract DeSwitch {
       gregisterId : registerId,
       rentalRate : _rentalRate,
       depositRequired : _depositRequired,
-      gameOwner : msg.sender,
+      gameOwner : payable(msg.sender),
       state : gameState.Available,
       timeRentalStart : 0,
-      gameRenter : address(0)
+      gameRenter : payable(address(0))
     });
 
     //add to the mapping registerId -> Owner Address
@@ -193,7 +206,7 @@ contract DeSwitch {
     //at the end of this function the state of the Game should be set to "TransactionInProgress"
     
     games[_trackingId].state = gameState.Reserved;
-    games[_trackingId].gameRenter = msg.sender;
+    games[_trackingId].gameRenter = payable(msg.sender);
     // games[registerIdList[_trackignId]]
 
     //Emit event
