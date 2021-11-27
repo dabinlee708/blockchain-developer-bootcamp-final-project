@@ -14,7 +14,7 @@ Decentralized Game Rental
 5. With public access to the chain, anyone can look up on the rental statistics and make informed decisions if they want to buy/sell/rent/borrow game titles depending on the market demand.
 
 Front-end Is available here: https://dabinlee708.github.io/
-Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ETHEREUM ROPSTEN)
+Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ETHEREUM Kovan)
 
 Directory Structure
 
@@ -50,10 +50,10 @@ Directory Structure
 Instructions
 1. git clone 
 git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-project
-2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin truffle-hdwallet-provider dotenv
+2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin
 Visual Studio Code> Extensions (Ctrl+Shift+x)> Live Server and Remote - WSL (If you are on Windows and want to compile, run and deploy from WSL)
 3. Install dependencies
-npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts
+npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts  truffle-hdwallet-provider dotenv
 4. Within Visual Studio, open terminal and run following commands in order
 dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$cd blockchain-developer-bootcamp-final-project/
 dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$truffle compile

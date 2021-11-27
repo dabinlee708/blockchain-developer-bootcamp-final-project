@@ -14,6 +14,8 @@ contract DeSwitch {
     priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
   }
 
+  
+
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameShippedToRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
@@ -50,14 +52,10 @@ contract DeSwitch {
     uint timeRentalStart;
     address payable gameRenter;
   }
-
   
   mapping (uint => Game) public games;
-  // mapping (uint => address) public registerIdList;
   mapping (address => uint) public pendingBalances;
   mapping (address => uint) public confirmedBalances;
-
-  // mapping (uint => Game) public games;
 
   /// @notice registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
   uint registerId = 0 ;
@@ -163,7 +161,7 @@ contract DeSwitch {
   }
 
   /// @notice queryGameStaqtusbyTI
-  /// @param _gameId takes in the game registration ID according to http://nswdb.com/
+  /// @param _trackingId takes in the game registration ID according to http://nswdb.com/
   function queryGameStatusbyTI(uint _trackingId) public view returns(string memory){
     if (games[_trackingId].state == gameState.Invalid) return "Invalid";
     if (games[_trackingId].state == gameState.Available) return "Available";
@@ -196,7 +194,7 @@ contract DeSwitch {
   }
 
   /// @notice rentGame takes in _TrackingID and changes the gameState of existing game from Available to Reserved.
-  /// @param _trackingID takes in the trackingID value of the game
+  /// @param _trackingId takes in the trackingID value of the game
   function rentGame(uint _trackingId) public payable notGameOwner(_trackingId) isAvailableGame(_trackingId) returns(string memory) {
     //should be "payable" as this requires ether to be transffered to the contract
     //should be "public" as anyone should be able to rent the game 
@@ -218,7 +216,7 @@ contract DeSwitch {
   }
 
   /// @notice shipGame takes in the _trackingId and changes the gameState of existing game from Reserved to ShippedToRenter.
-  /// @param _trackingID takes in the trackingId value of the game
+  /// @param _trackingId takes in the trackingId value of the game
   function shipGame(uint _trackingId) public isGameOwner(_trackingId) isReservedGame(_trackingId) returns(string memory){
     //To be called by the gameOwner to account for state update to "Shipped"
     //Only the gameOwner with same account address as games[trackingId].gameOnwer can execute this function

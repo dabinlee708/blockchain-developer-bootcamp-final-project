@@ -1,5 +1,5 @@
 
-// const ssAddress = '0x61B28a04c63961BfCdb2169967D45E94d0e4c2EB'
+// const ssAddressLocal = '0x61B28a04c63961BfCdb2169967D45E94d0e4c2EB'
 const ssAddress = '0x125340Cca81f9b9838cB7832b872779F00Bf1f77'
 const ssABI = [
   {
@@ -566,7 +566,6 @@ const ssABI = [
 ]
 
 
-// console.log("Java")
 window.addEventListener('load',function(){
     if (typeof window.ethereum !== 'undefined'){
         let mmDetected = document.getElementById('mm-detected')
@@ -598,6 +597,8 @@ const receiveGameFromRenter = document.getElementById("receiveGameFromRenter");
 const receiveGameFromOwner = document.getElementById("receiveGameFromOwnerRZ");
 const currentGameCount = document.getElementById("currentRegisteredGameCount");
 const queryBalance = document.getElementById("checkBalance");
+const queryChainlink = document.getElementById("chainlinkButton");
+
 
 //declare user input fields
 const gameStatusRZ = document.getElementById("updateTextRZ");
@@ -607,9 +608,18 @@ const gameStatusOZ = document.getElementById("updateTextOZ");
 const registerResult = document.getElementById("creationText");
 const pendingBalanceValue = document.getElementById("pendingBalance");
 const confirmedBalanceValue = document.getElementById("confirmedBalance");
+const chainlinkResult = document.getElementById("chainlinkResult");
+
+
+// const web3Infura = new Web3("https://ropsten.infura.io/v3/a989574a645148b8b40bd6ff9bcbb4ab")
+
 
 var web3 = new Web3(window.ethereum);
 const deSwitch = new web3.eth.Contract(ssABI, ssAddress);
+const aggregatorV3InterfaceABI = [{ "inputs": [], "name": "decimals", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "description", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint80", "name": "_roundId", "type": "uint80" }], "name": "getRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "latestRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "version", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }]
+const addr = "0x9326BFA02ADD2366b30bacB125260Af641031331"
+const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr)
+
 deSwitch.setProvider(window.ethereum);
 deSwitch.methods.queryGameCount().call((err, result) => {
   // console.log(result);
@@ -618,6 +628,23 @@ deSwitch.methods.queryGameCount().call((err, result) => {
     result+
     " games registered");
   });
+
+priceFeed.methods.latestRoundData().call()
+    .then((roundData) => {
+        console.log("Latest Round Data", roundData);
+        var aa = document.getElementById("chainlinkResult");
+        var formattedTime = new Date(roundData[2]*1000).toLocaleDateString("en-US");
+        var formmatedTime2 = new Date(roundData[2]*1000).toLocaleTimeString("en-US")
+        aa.innerHTML = (
+          "current price of ETH is US$"+
+          (roundData[1]/100000000) +
+          " "+
+          "USD based on Chainlink Oracle, updated at "+
+          formattedTime+
+          formmatedTime2
+        );
+})
+
 
 queryBalance.onclick = async () => {
   // const queryAddress = document.getElementById
@@ -633,6 +660,24 @@ queryBalance.onclick = async () => {
       // +result[1]
     );
   });
+}
+
+
+queryChainlink.onclick = async() =>{
+  priceFeed.methods.latestRoundData().call().then((roundData)=>{
+    console.log("Latest Round Data", roundData);
+        var aa = document.getElementById("chainlinkResult");
+        var formattedTime = new Date(roundData[2]*1000).toLocaleDateString("en-US");
+        var formmatedTime2 = new Date(roundData[2]*1000).toLocaleTimeString("en-US")
+        aa.innerHTML = (
+          "current price of ETH is US$"+
+          (roundData[1]/100000000) +
+          " "+
+          "USD based on Chainlink Oracle, updated at "+
+          formattedTime+
+          formmatedTime2
+        );
+  })
 }
 
 //event fired upon clicking "Register Game" button from the browser
@@ -677,7 +722,7 @@ queryGame.onclick = async () => {
     tempRental = result[0];
     gameStatusRZ.innerHTML = (
       "Queried game with tracking ID "+
-      queryTrackingId.value+
+      queryTrackingId+
       " is "+
       tempStatus+
       ". Deposit is "+
@@ -708,10 +753,6 @@ rentGame.onclick = async ()=> {
     value: tempDeposit
   }).on('receipt', function(receipt){
     const returnValues = receipt.events.LogForGameRentalRequested.returnValues;
-    // console.log("gammeId",returnValues.gameId);
-    // console.log("gameOwnerAddress",returnValues.gameOwnerAddress);
-    // console.log("gameRenter",returnValues.gameRenter);
-    // console.log("registerId",returnValues.registerId);
     gameStatusRZ.innerHTML = (
       "successful. GameRenter "+ 
       returnValues.gameRenter+
@@ -780,16 +821,6 @@ returnGameToOwner.onclick = async ()=>{
   })
 }
 
-const Web3 = require("web3") // for nodejs only
-const web3 = new Web3("https://kovan.infura.io/v3/<infura_project_id>")
-const aggregatorV3InterfaceABI = [{ "inputs": [], "name": "decimals", "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "description", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint80", "name": "_roundId", "type": "uint80" }], "name": "getRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "latestRoundData", "outputs": [{ "internalType": "uint80", "name": "roundId", "type": "uint80" }, { "internalType": "int256", "name": "answer", "type": "int256" }, { "internalType": "uint256", "name": "startedAt", "type": "uint256" }, { "internalType": "uint256", "name": "updatedAt", "type": "uint256" }, { "internalType": "uint80", "name": "answeredInRound", "type": "uint80" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "version", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }]
-const addr = "0x9326BFA02ADD2366b30bacB125260Af641031331"
-const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr)
-priceFeed.methods.latestRoundData().call()
-    .then((roundData) => {
-        // Do something with roundData
-        console.log("Latest Round Data", roundData)
-    })
 
 
 receiveGameFromRenter.onclick = async ()=>{
@@ -816,4 +847,7 @@ receiveGameFromRenter.onclick = async ()=>{
       " owner wallet address"
     ).on('error', console.error);
   })
+
+
+ 
 }
