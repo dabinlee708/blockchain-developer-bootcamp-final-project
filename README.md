@@ -13,6 +13,40 @@ Decentralized Game Rental
 4. Upon completion of rental, via smart contract, deposit can be returned immediately after deducting the rental cost.
 5. With public access to the chain, anyone can look up on the rental statistics and make informed decisions if they want to buy/sell/rent/borrow game titles depending on the market demand.
 
+Front-end Is available here: https://dabinlee708.github.io/
+
+Directory Structure
+
+/build
+/build/DeSwitch.json #ABI to be copied from here to DeSwitch.js
+/build/Migrations.json 
+
+/contracts
+/contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity
+/contracts/Migrations.sol
+
+/Data
+/Data/NSWreleases.xml #Switch Games and Game ID data
+
+/migrations
+/migrations/1_initial_migrations.js #migration script
+/migrations/2_DeSwitch.js #migration script
+
+/test
+/test/DeSwitch_Test.js #Truffle Unit Test Cases
+
+/Frontend
+/Frontend/index.html #Front-end HTML
+/Frontend/DeSwitch.js #Front-end JavaScript
+
+/Project Requirements
+/Project Requirements/avoiding_common_attacks.md #Security Measures used to avoid common attacks 
+/Project Requirements/design_pattern_decisions.md #Design pattern deicisions
+/Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
+
+/truffle-config.js #Truffle Configurations
+
+
 Instructions
 1. git clone 
 git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-project
@@ -32,3 +66,5 @@ truffle(develop)> test
 9. Network to be used 
 If you are deploying locally> Local ganache with your WSL/Ganache IP address and Port
 
+
+When deployed locally, it should run locally at 127.0.0.1, port 9545.
