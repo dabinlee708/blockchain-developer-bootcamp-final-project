@@ -14,6 +14,7 @@ Decentralized Game Rental
 5. With public access to the chain, anyone can look up on the rental statistics and make informed decisions if they want to buy/sell/rent/borrow game titles depending on the market demand.
 
 Front-end Is available here: https://dabinlee708.github.io/
+Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ETHEREUM ROPSTEN)
 
 Directory Structure
 
@@ -45,7 +46,6 @@ Directory Structure
 /Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
 
 /truffle-config.js #Truffle Configurations
-
 
 Instructions
 1. git clone 

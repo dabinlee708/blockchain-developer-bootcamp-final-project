@@ -228,7 +228,6 @@ contract DeSwitch {
     return "successfully shipped reserved game!";
   } 
 
-
   /// @notice receiveGameRenter takes in the _trackingId and changes the gameState of existing game from ShippedToRenter to Renter.
   /// @param _trackingId takes in the trackingId value of the game
   function receiveGameRenter(uint _trackingId) public isGameRenter(_trackingId) isShippedToRenterGame(_trackingId) returns(string memory){
