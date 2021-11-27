@@ -50,7 +50,7 @@ Directory Structure
 Instructions
 1. git clone 
 git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-project
-2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin 
+2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin truffle-hdwallet-provider
 Visual Studio Code> Extensions (Ctrl+Shift+x)> Live Server and Remote - WSL (If you are on Windows and want to compile, run and deploy from WSL)
 3. Install dependencies
 npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts
