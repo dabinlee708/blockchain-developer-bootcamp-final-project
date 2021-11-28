@@ -20,18 +20,19 @@ Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ET
 
 Directory Structure
 
-/build/DeSwitch.json #ABI to be copied from here to DeSwitch.js
-/contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity
-/Data/NSWreleases.xml #Switch Games and Game ID data
-/migrations/1_initial_migrations.js #migration script
-/migrations/2_DeSwitch.js #migration script
-/test/DeSwitch_Test.js #Truffle Unit Test Cases
-/Frontend/index.html #Front-end HTML
-/Frontend/DeSwitch.js #Front-end JavaScript
-/Project Requirements/avoiding_common_attacks.md #Security Measures used to avoid common attacks 
-/Project Requirements/design_pattern_decisions.md #Design pattern deicisions
-/Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
-/truffle-config.js #Truffle Configurations
+1. /build/DeSwitch.json #ABI to be copied from here to DeSwitch.js
+2. /contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity
+3. /Data/NSWreleases.xml #Switch Games and Game ID data
+4. /migrations/1_initial_migrations.js #migration script
+5. /migrations/2_DeSwitch.js #migration script
+6. /test/DeSwitch_Test.js #Truffle Unit Test Cases
+7. /Frontend/index.html #Front-end HTML
+8. /Frontend/DeSwitch.js #Front-end JavaScript
+9. /Project Requirements/avoiding_common_attacks.md #Security Measures used to avoid common attacks 
+10. /Project Requirements/Consensys Walkthrough - Dabin.mp4 #Walkthrough video
+11. /Project Requirements/design_pattern_decisions.md #Design pattern deicisions
+12. /Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
+13. /truffle-config.js #Truffle Configurations
 
 Instructions
 1. git clone 
