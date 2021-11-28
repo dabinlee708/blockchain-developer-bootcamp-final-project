@@ -674,6 +674,7 @@ queryChainlink.onclick = async() =>{
           " "+
           "USD based on Chainlink Oracle, updated at "+
           formattedTime+
+          " "+
           formmatedTime2
         );
   })
