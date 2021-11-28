@@ -640,6 +640,7 @@ priceFeed.methods.latestRoundData().call()
           " "+
           "USD based on Chainlink Oracle, updated at "+
           formattedTime+
+          " "+
           formmatedTime2
         );
 })
