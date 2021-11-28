@@ -19,7 +19,7 @@ Front-end Is available here: https://dabinlee708.github.io/
 Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ETHEREUM Kovan)
 
 Directory Structure
-'''
+
 /build/DeSwitch.json #ABI to be copied from here to DeSwitch.js
 /contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity
 /Data/NSWreleases.xml #Switch Games and Game ID data
@@ -32,7 +32,7 @@ Directory Structure
 /Project Requirements/design_pattern_decisions.md #Design pattern deicisions
 /Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
 /truffle-config.js #Truffle Configurations
-'''
+
 Instructions
 1. git clone 
 git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-project
@@ -54,3 +54,4 @@ If you are deploying locally> Local ganache with your WSL/Ganache IP address and
 
 
 When deployed locally, it should run locally at 127.0.0.1, port 9545.
+Walkthrough video is available under /Project Requirements/Consensys Walkthrough - Dabin.mp4
