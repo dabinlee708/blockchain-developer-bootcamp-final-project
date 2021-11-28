@@ -9,21 +9,30 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 /// @author Dabin Lee
 /// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
 contract DeSwitch {
+
+  //AggregatorV3Interface internal priceFeed is used to fetch price feed for ETH/USD from chainlink Oracle. 
   AggregatorV3Interface internal priceFeed;
+
+  
   constructor() {
+    //We make use of AgrregatorV3Interface to implement our own function that returns timestamp of a latest price feed round from Chainlink 
     priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
   }
 
   
-
+  //Declare events 
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameShippedToRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameReceivedByRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
+  // event LogForGameReceivedByRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint timeRentalStart);
   event LogForGameShippedToOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameReceivedByOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
+  // event LogForGameReceivedByOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint timeRentalEnd);
   event LogForPendingBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
   event LogForConfirmedBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
+
+  // enum gameState is an enum object that describes game's status in blockchain to aid in validating pre-requisites with modifiers
   enum gameState {
     Invalid,
     Available,
@@ -34,6 +43,7 @@ contract DeSwitch {
     RentalCompleted
   }
 
+  // struct Game is an object that describes the game object being rented out within the blockchain.
   struct Game{
     /// @param gameid is unique game ID assiged by Nintendo upon release of a game Title
     /// @param gregisterId is a unique reference number assigned during game registration
@@ -41,7 +51,8 @@ contract DeSwitch {
     /// @param depositRequired is the deposit required in wei, to be used to offset rental charges upon successful completion of rental
     /// @param gameOwner is the payable wallet address of the game owner where the rental charges will be transferred to
     /// @param state is an enum gameState which describes the state of a unqiue game such as "Available" or "Rented"
-    /// @param timeRentalStart is a uint value which logs down when the rental was started to calculate the rental charges upon completion of rental
+    /// @param timeRentalStart is a uint value (unixtime) which logs down when the rental was started (When the renter received the game from the owner)
+    /// @param timeRentalEnd is a uint value (unixtime) which logs down when the rental was completed (When the owner received the game from the renter)
     /// @param gameRenter is the payable wallet address of the game renter where the deposit minus rental charges will be transferred to
     uint gameid;
     uint gregisterId;
@@ -50,11 +61,17 @@ contract DeSwitch {
     address payable gameOwner;
     gameState state;
     uint timeRentalStart;
+    uint timeRentalEnd;
     address payable gameRenter;
   }
   
+
+  // mapping games contains games while using trackingId as a key
   mapping (uint => Game) public games;
+
+  //TODO pendingBalances to be implemented and used by other functions to log the amounts being held by smart contract which can only be withdrawn once the rental transaction completes.
   mapping (address => uint) public pendingBalances;
+  //TODO confirmedBalances to be implemented and used by other functions to log the amounts being held by smart contact which is ready to be withdrawn by the game owner, as a reward for renting out the game.
   mapping (address => uint) public confirmedBalances;
 
   /// @notice registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
@@ -113,7 +130,8 @@ contract DeSwitch {
     return (registerId);
   }
 
-  function getLatestPrice() public view returns (int) {
+  /// @notice getLatestPrice function uses Chainlink's Data Feeds API to provide timestamp, price of ETH/USD pair so users can make more informed decision.
+  function getTimeStamp() public view returns (uint) {
     (
         uint80 roundID, 
         int price,
@@ -121,8 +139,8 @@ contract DeSwitch {
         uint timeStamp,
         uint80 answeredInRound
     ) = priceFeed.latestRoundData();
-    return price;
-}
+    return timeStamp;
+  }
   
   /// @notice registerGame
   /// @param _gameId takes in the game registration ID according to http://nswdb.com/
@@ -149,6 +167,7 @@ contract DeSwitch {
       gameOwner : payable(msg.sender),
       state : gameState.Available,
       timeRentalStart : 0,
+      timeRentalEnd : 0,
       gameRenter : payable(address(0))
     });
 
@@ -177,10 +196,10 @@ contract DeSwitch {
   /// @param _address of the account to be queried for balance check
   function queryBalance(address _address) public view returns(uint, uint){
     require(msg.sender == _address);
+
     //TODO implement query Balance function
-    if (pendingBalances[_address] != 0 && confirmedBalances[_address] != 0){
-      // return (pendingBalances[_address], confirmedBalances[_address]);
-      return (1,1);
+    if (pendingBalances[_address] != 0 || confirmedBalances[_address] != 0){
+      return (pendingBalances[_address], confirmedBalances[_address]);
     }else{
       return (0,0);
     }
@@ -232,7 +251,22 @@ contract DeSwitch {
     //To be called by the gameBuyer or gameRenter to account for state change to "Rented" or "Sold"
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
+
+    //Uncomment for deployment on Kovan
+    // (
+    //   uint80 roundID, 
+    //   int price,
+    //   uint startedAt,
+    //   uint timeStamp,
+    //   uint80 answeredInRound
+    // ) = priceFeed.latestRoundData();
+
+    //Update gameState
     games[_trackingId].state = gameState.Rented;
+
+    // TODO below is to be "enabled" once the payment features are implemented.
+    // games[_trackingId].timeRentalStart = timeStamp;
+    // emit LogForGameReceivedByRenter(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner, games[_trackingId].timeRentalStart);
     emit LogForGameReceivedByRenter(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     return "successfully received the rented game!";
   }
@@ -254,9 +288,10 @@ contract DeSwitch {
   function receiveGameOwner(uint _trackingId) public isGameOwner(_trackingId) isShippedToOwnerGame(_trackingId) returns(string memory){
     //To be called by the gameOwner to account for state change when the game is returned by the renter.
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
-    //This function makes the time to be loggged as the start of rental as timeRentalStart
+    //This function makes the time to be loggged as the start of rental as timeRentalStart  
     games[_trackingId].state = gameState.RentalCompleted;
     emit LogForGameReceivedByOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
+    // emit LogForGameReceivedByOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner, games[_trackingId].timeRentalEnd);
     return "The owner successfully received the game. Rental is complete.";
   }
 }
