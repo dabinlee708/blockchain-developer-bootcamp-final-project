@@ -42,9 +42,9 @@ Visual Studio Code> Extensions (Ctrl+Shift+x)> Live Server and Remote - WSL (If 
 3. Install dependencies
 npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts  truffle-hdwallet-provider dotenv openzeppelin-solidity
 4. Within Visual Studio, open terminal and run following commands in order
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$cd blockchain-developer-bootcamp-final-project/
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$truffle compile
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$truffle develop
+$cd blockchain-developer-bootcamp-final-project/
+$truffle compile
+$truffle develop
 truffle(develop)> migrate
 truffle(develop)> test
 6. From Visual Studio Code explorer tab, right click on index.html and click "Open with Live Server (Alt + L Alt + O)
