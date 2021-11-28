@@ -4,31 +4,26 @@ pragma experimental ABIEncoderV2;
 
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import 'openzeppelin-solidity/contracts/access/Ownable.sol';
 
 /// @title Decentralized Switch Game Rental Platform
 /// @author Dabin Lee
 /// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
-contract DeSwitch {
+contract DeSwitch is Ownable {
 
   //AggregatorV3Interface internal priceFeed is used to fetch price feed for ETH/USD from chainlink Oracle. 
   AggregatorV3Interface internal priceFeed;
 
-  
-  constructor() {
-    //We make use of AgrregatorV3Interface to implement our own function that returns timestamp of a latest price feed round from Chainlink 
-    priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
-  }
-
-  
   //Declare events 
+  // To be used once the payment functions have been implemented
+  // event Deposited(address indexed payee, uint256 weiAmount);
+  // event Withdrawn(address indexed payee, uint256 weiAmount);
   event LogForGameRegistered(uint gameId, uint registerId, address gameOwnerAddress, uint rentalRate, uint depositRequired);
   event LogForGameRentalRequested(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameShippedToRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameReceivedByRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
-  // event LogForGameReceivedByRenter(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint timeRentalStart);
   event LogForGameShippedToOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
   event LogForGameReceivedByOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress);
-  // event LogForGameReceivedByOwner(uint gameId, uint registerId, address gameRenter, address gameOwnerAddress, uint timeRentalEnd);
   event LogForPendingBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
   event LogForConfirmedBalanceIncrease(address ownerAddress, uint increaseValue, uint newBalance);
 
@@ -65,13 +60,11 @@ contract DeSwitch {
     address payable gameRenter;
   }
   
-
   // mapping games contains games while using trackingId as a key
   mapping (uint => Game) public games;
-
-  //TODO pendingBalances to be implemented and used by other functions to log the amounts being held by smart contract which can only be withdrawn once the rental transaction completes.
+  //pendingBalances to be implemented and used by other functions to log the amounts being held by smart contract which can only be withdrawn once the rental transaction completes.
   mapping (address => uint) public pendingBalances;
-  //TODO confirmedBalances to be implemented and used by other functions to log the amounts being held by smart contact which is ready to be withdrawn by the game owner, as a reward for renting out the game.
+  //confirmedBalances to be implemented and used by other functions to log the amounts being held by smart contact which is ready to be withdrawn by the game owner, as a reward for renting out the game.
   mapping (address => uint) public confirmedBalances;
 
   /// @notice registerId is a reference counter which starts at 0 and gets added everytime there is a successful registeration of game for rental
@@ -124,6 +117,11 @@ contract DeSwitch {
     require(games[_trackingId].state == gameState.ShippedToOwner, "This action can only be done to game in 'ShippedToOwner' status");
     _;
   }
+    
+  constructor() public {
+      //We make use of AgrregatorV3Interface to implement our own function that returns timestamp of a latest price feed round from Chainlink 
+      priceFeed = AggregatorV3Interface(0x9326BFA02ADD2366b30bacB125260Af641031331);
+  }
 
   /// @notice queryGameCount is a publi view function which returns current value of registerId, which equals the # of registered games in the smart contract
   function queryGameCount() public view returns(uint){
@@ -131,6 +129,7 @@ contract DeSwitch {
   }
 
   /// @notice getLatestPrice function uses Chainlink's Data Feeds API to provide timestamp, price of ETH/USD pair so users can make more informed decision.
+  /// TODO to be used once the payment based on rental period gets implemented, Smart Contract will compare the timestamp and calculate the rental fee.
   function getTimeStamp() public view returns (uint) {
     (
         uint80 roundID, 
@@ -141,6 +140,7 @@ contract DeSwitch {
     ) = priceFeed.latestRoundData();
     return timeStamp;
   }
+
   
   /// @notice registerGame
   /// @param _gameId takes in the game registration ID according to http://nswdb.com/
@@ -171,9 +171,6 @@ contract DeSwitch {
       gameRenter : payable(address(0))
     });
 
-    //add to the mapping registerId -> Owner Address
-    // registerIdList[registerId] = msg.sender;
-
     //Emits appropriate event to log the chagnes 
     emit LogForGameRegistered(_gameId, registerId, msg.sender, _rentalRate, _depositRequired);
     return (_gameId, registerId);
@@ -194,15 +191,20 @@ contract DeSwitch {
 
   /// @notice queryBalance takes in the address and returns the value of pending and confirmed Balance for withdrawal
   /// @param _address of the account to be queried for balance check
+  /// TODO this is to be implemented but out of scope for the current phase of the project.
   function queryBalance(address _address) public view returns(uint, uint){
     require(msg.sender == _address);
-
-    //TODO implement query Balance function
     if (pendingBalances[_address] != 0 || confirmedBalances[_address] != 0){
       return (pendingBalances[_address], confirmedBalances[_address]);
     }else{
       return (0,0);
     }
+  }
+
+  /// @notice withdrawConfirmedBalance function withdraw 
+  /// TODO this is to be implemented but out of scope for the current phase of the project.
+  function withdrawConfirmedBalance() public payable returns(uint,uint){
+    return (0,0);
   }
 
   /// @notice queryGamePricebyTI takes in the _trackingId and return the rental rate and deposit fee in wei.
@@ -252,7 +254,7 @@ contract DeSwitch {
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
 
-    //Uncomment for deployment on Kovan
+    // // Uncomment for deployment on Kovan as this does not work on local truffle deployment
     // (
     //   uint80 roundID, 
     //   int price,
@@ -293,5 +295,12 @@ contract DeSwitch {
     emit LogForGameReceivedByOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner);
     // emit LogForGameReceivedByOwner(games[_trackingId].gameid, games[_trackingId].gregisterId, games[_trackingId].gameRenter, games[_trackingId].gameOwner, games[_trackingId].timeRentalEnd);
     return "The owner successfully received the game. Rental is complete.";
+  }
+
+  /// @notice masterModify is an emergency-rescue function which can only be called by the contract's owner but cannot modify the gameRenter and gameOwner address, to forcefully change the state to rental completed.
+  /// @param _trackingId takes in the trackingId value of the game
+  function masterModify(uint _trackingId) onlyOwner public {
+    games[_trackingId].state= gameState.RentalCompleted;
+    
   }
 }

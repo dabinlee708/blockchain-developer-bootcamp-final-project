@@ -179,18 +179,6 @@ contract("DeSwtich", function (accounts) {
       alice //expected - owner address alice
     );
 
-  // //Attempt to ship the game from Bob should fail as Bob is not the game owner
-  // await truffleAssert.reverts(
-
-  //   //shipGame request for game registered by alice
-  //   instance.shipGame(
-  //     1, //tracking ID 1 is a game registered by Alice
-  //     {from: bob}),//Request sent from bob, which should be rejected
-
-  //   //expected error
-  //   "Only game owners can perform this action"
-  // );
-
   await instance.shipGame(
     1,//trackingID 1 (Owned by alice, being rented to bob and being shipped to bob)
     {from: alice});//Only alice can ship the game
@@ -201,18 +189,6 @@ contract("DeSwtich", function (accounts) {
       bob,//Renter's address
       alice//owner's address
     )
-  
-  // //Attempt to receive the game from alice although only bob can receive the game as the renter
-  // await truffleAssert.reverts(
-
-  //   //shipGame request for game registered by alice
-  //   instance.receiveGameRenter(
-  //     1, //tracking ID 1 is a game registered by Alice, being rented by bob
-  //     {from: alice}),//Request sent from alice, which should be rejected
-
-  //   //expected error
-  //   "Only game renters can perform this action"
-  // )
 
   //Check if receiveGameRenter can be done successfully, when sent from bob
   await instance.receiveGameRenter(
@@ -226,21 +202,6 @@ contract("DeSwtich", function (accounts) {
     alice//owner's address
   )
 
-  
-
-  // //Attempt to return the game from alice although only bob can return the game as the renter
-  // await truffleAssert.reverts(
-
-  //   //return request for game registered by alice
-  //   instance.returnGame(
-  //     1, //tracking ID 1 is a game registered by Alice, being rented by bob
-  //     {from: alice}),//Request sent from alice, which should be rejected
-
-  //   //expected error
-  //   "Only game renters can perform this action"
-  // );
-
-
   //Check if returnGame can be done successfully, when sent from bob
   await instance.returnGame(
     1,//trackingID 1
@@ -253,18 +214,6 @@ contract("DeSwtich", function (accounts) {
     alice//owner's address
   )
 
-  // //Attempt to receive the returned game from alice although only bob can return the game as the renter
-  // await truffleAssert.reverts(
-
-  //   //receiveGameOwner request for game registered by alice
-  //   instance.receiveGameOwner(
-  //     1, //tracking ID 1 is a game registered by Alice, being rented by bob
-  //     {from: bob}),//Request sent from bob, which should be rejected
-
-  //   //expected error
-  //   "Only game owners can perform this action"
-  // );
-
   //Check if receiveGameOwner can be done successfully, when sent from alice
   await instance.receiveGameOwner(
     1,//trackingID 1
@@ -275,7 +224,5 @@ contract("DeSwtich", function (accounts) {
     1,//tracking ID 1
     bob,//Renter's address
     alice//owner's address
-  )});
- 
-     
+  )}); 
 })
