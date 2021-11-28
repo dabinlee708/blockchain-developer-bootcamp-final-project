@@ -9,6 +9,7 @@ import 'openzeppelin-solidity/contracts/access/Ownable.sol';
 /// @title Decentralized Switch Game Rental Platform
 /// @author Dabin Lee
 /// @notice You can use this contract to register and rent Nintendo Switch games where deposit is held by the smart contract
+/// @dev payment/withdrawal/timestamp functions are to be developed in the later phase 
 contract DeSwitch is Ownable {
 
   //AggregatorV3Interface internal priceFeed is used to fetch price feed for ETH/USD from chainlink Oracle. 
@@ -146,6 +147,8 @@ contract DeSwitch is Ownable {
   /// @param _gameId takes in the game registration ID according to http://nswdb.com/
   /// @param _rentalRate takes in the rental charges per day in wei
   /// @param _depositRequired takes in the deposit charge for the whole game in wei
+  /// @return uint _gameId, which can be used to find out what game it is based on Nintendo's database
+  /// @return uint _registerId refer to the trackingId used to track each rental/game registered on the blockchain.
   function registerGame(uint _gameId, uint _rentalRate, uint _depositRequired) public returns(uint, uint){
     //should be a public function as anyone should be able to put their game for sale/rental
     //Users register games they own (Ex. Switch Games) as "Available"
@@ -178,6 +181,7 @@ contract DeSwitch is Ownable {
 
   /// @notice queryGameStaqtusbyTI
   /// @param _trackingId takes in the game registration ID according to http://nswdb.com/
+  /// @return string which describes the current state of the game, ex. Available, Reserved.. etc.
   function queryGameStatusbyTI(uint _trackingId) public view returns(string memory){
     if (games[_trackingId].state == gameState.Invalid) return "Invalid";
     if (games[_trackingId].state == gameState.Available) return "Available";
@@ -192,6 +196,7 @@ contract DeSwitch is Ownable {
   /// @notice queryBalance takes in the address and returns the value of pending and confirmed Balance for withdrawal
   /// @param _address of the account to be queried for balance check
   /// TODO this is to be implemented but out of scope for the current phase of the project.
+  /// @return this function (TODO) is to return value of pending and confirmed balances once the payment related functions are implemented in the next phase
   function queryBalance(address _address) public view returns(uint, uint){
     require(msg.sender == _address);
     if (pendingBalances[_address] != 0 || confirmedBalances[_address] != 0){
@@ -209,6 +214,8 @@ contract DeSwitch is Ownable {
 
   /// @notice queryGamePricebyTI takes in the _trackingId and return the rental rate and deposit fee in wei.
   /// @param _trackingId takes in the trackingID  value of the game
+  /// @return uint rentalRate in ETH (wei) 
+  /// @return uint depositRate in ETH (wei)
   function queryGamePricebyTI(uint _trackingId) public view returns(uint, uint){
     //check if the game ID is valid
     return (games[_trackingId].rentalRate, games[_trackingId].depositRequired);
@@ -216,6 +223,7 @@ contract DeSwitch is Ownable {
 
   /// @notice rentGame takes in _TrackingID and changes the gameState of existing game from Available to Reserved.
   /// @param _trackingId takes in the trackingID value of the game
+  /// @return string "successfully rented" once the rentGame function completes
   function rentGame(uint _trackingId) public payable notGameOwner(_trackingId) isAvailableGame(_trackingId) returns(string memory) {
     //should be "payable" as this requires ether to be transffered to the contract
     //should be "public" as anyone should be able to rent the game 
@@ -238,6 +246,7 @@ contract DeSwitch is Ownable {
 
   /// @notice shipGame takes in the _trackingId and changes the gameState of existing game from Reserved to ShippedToRenter.
   /// @param _trackingId takes in the trackingId value of the game
+  /// @return string "successfully shipped reserved game!" once successful
   function shipGame(uint _trackingId) public isGameOwner(_trackingId) isReservedGame(_trackingId) returns(string memory){
     //To be called by the gameOwner to account for state update to "Shipped"
     //Only the gameOwner with same account address as games[trackingId].gameOnwer can execute this function
@@ -249,11 +258,13 @@ contract DeSwitch is Ownable {
 
   /// @notice receiveGameRenter takes in the _trackingId and changes the gameState of existing game from ShippedToRenter to Renter.
   /// @param _trackingId takes in the trackingId value of the game
+  /// @return string "successfully received the rented game!" once successful
   function receiveGameRenter(uint _trackingId) public isGameRenter(_trackingId) isShippedToRenterGame(_trackingId) returns(string memory){
     //To be called by the gameBuyer or gameRenter to account for state change to "Rented" or "Sold"
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
     //This function makes the time to be loggged as the start of rental as timeRentalStart
-
+    
+    //TODO
     // // Uncomment for deployment on Kovan as this does not work on local truffle deployment
     // (
     //   uint80 roundID, 
@@ -275,6 +286,7 @@ contract DeSwitch is Ownable {
 
   /// @notice returnGame takes in the _trackingId and changes the gameState of the existing game from Rented to ShippedToOwner.
   /// @param _trackingId takes in the trackingId value of the game
+  /// @return string "successfully shipped the rented game back to owner!"
   function returnGame(uint _trackingId) public isGameRenter(_trackingId) isRentedGame(_trackingId) returns(string memory){
     //To be called buy the owner once the game has returned in good condition.
     //This function returns the deposit (Totaldeposit - rental fee) from the smart Contract to the renter
@@ -287,6 +299,7 @@ contract DeSwitch is Ownable {
 
   /// @notice receiveGameOwner takes in the _trackingID and changes the gameState of the existing game from ShippedToOwner to RentalCompleted
   /// @param _trackingId takes in the trackingId value of the game
+  /// @return string "The owner successfully received the game. Rental is complete." once successful
   function receiveGameOwner(uint _trackingId) public isGameOwner(_trackingId) isShippedToOwnerGame(_trackingId) returns(string memory){
     //To be called by the gameOwner to account for state change when the game is returned by the renter.
     //This function triggers payment to the gameOwner address if the transaction completed was "buy" instead of "rent"
@@ -301,6 +314,5 @@ contract DeSwitch is Ownable {
   /// @param _trackingId takes in the trackingId value of the game
   function masterModify(uint _trackingId) onlyOwner public {
     games[_trackingId].state= gameState.RentalCompleted;
-    
   }
 }
