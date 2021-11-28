@@ -41,12 +41,12 @@ git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-pro
 Visual Studio Code> Extensions (Ctrl+Shift+x)> Live Server and Remote - WSL (If you are on Windows and want to compile, run and deploy from WSL)
 3. Install dependencies
 npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts  truffle-hdwallet-provider dotenv openzeppelin-solidity
-4. Within Visual Studio, open terminal and run following commands in order
-$cd blockchain-developer-bootcamp-final-project/
-$truffle compile
-$truffle develop
-truffle(develop)> migrate
-truffle(develop)> test
+4. Within Visual Studio, open terminal and run following commands in order<br>
+$cd blockchain-developer-bootcamp-final-project/<br>
+$truffle compile <br>
+$truffle develop<br>
+truffle(develop)> migrate<br>
+truffle(develop)> test<br>
 6. From Visual Studio Code explorer tab, right click on index.html and click "Open with Live Server (Alt + L Alt + O)
 7. Web Browser should display the Web UI for the Decentralized Swtich Game Exchange
 8. Click on Connect to MetaMask to authenticate and connect your MetaMask wallet.
