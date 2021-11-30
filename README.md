@@ -53,6 +53,8 @@ truffle(develop)> test<br>
 9. Network to be used 
 If you are deploying locally> Local ganache with your WSL/Ganache IP address and Port
 
+ETH Wallet Address for the NFT Certificate<br>
+0x9C3f53D80C3a0184A2Db0A06Ff07d0DedF5F493A
 
 When deployed locally, it should run locally at 127.0.0.1, port 9545.
 Walkthrough video is available under /Project Requirements/Consensys Walkthrough - Dabin.mp4
