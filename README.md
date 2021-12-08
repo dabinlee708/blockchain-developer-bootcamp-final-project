@@ -19,38 +19,42 @@ Front-end Is available here: https://dabinlee708.github.io/
 Smart Contract is available here: 0x125340Cca81f9b9838cB7832b872779F00Bf1f77 (ETHEREUM Kovan)
 
 Directory Structure
-'''
-/build/DeSwitch.json #ABI to be copied from here to DeSwitch.js
-/contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity
-/Data/NSWreleases.xml #Switch Games and Game ID data
-/migrations/1_initial_migrations.js #migration script
-/migrations/2_DeSwitch.js #migration script
-/test/DeSwitch_Test.js #Truffle Unit Test Cases
-/Frontend/index.html #Front-end HTML
-/Frontend/DeSwitch.js #Front-end JavaScript
-/Project Requirements/avoiding_common_attacks.md #Security Measures used to avoid common attacks 
-/Project Requirements/design_pattern_decisions.md #Design pattern deicisions
-/Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)
-/truffle-config.js #Truffle Configurations
-'''
+<br>
+/build/DeSwitch.json #ABI to be copied from here to DeSwitch.js<br>
+/contracts/DeSwitch.sol #Smart Contract for Decentralized Exchange in Solidity<br>
+/Data/NSWreleases.xml #Switch Games and Game ID data<br>
+/migrations/1_initial_migrations.js #migration script<br>
+/migrations/2_DeSwitch.js #migration script<br>
+/test/DeSwitch_Test.js #Truffle Unit Test Cases<br>
+/Frontend/index.html #Front-end HTML<br>
+/Frontend/DeSwitch.js #Front-end JavaScript<br>
+/Project Requirements/avoiding_common_attacks.md #Security Measures used to avoid common attacks <br>
+/Project Requirements/Consensys Walkthrough - Dabin.mp4 #Walkthrough video<br>
+/Project Requirements/design_pattern_decisions.md #Design pattern deicisions<br>
+/Project Requirements/deployed_address.txt  #Address Smart Contract is deployed on Public Ethereum Network (Ropsten)<br>
+/truffle-config.js #Truffle Configurations<br>
+
 Instructions
 1. git clone 
 git clone https://github.com/dabinlee708/blockchain-developer-bootcamp-final-project
-2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin
+2. Open the cloned repo from Visual Studio Code and intsall Live-server plugin<br>
 Visual Studio Code> Extensions (Ctrl+Shift+x)> Live Server and Remote - WSL (If you are on Windows and want to compile, run and deploy from WSL)
-3. Install dependencies
+3. Install dependencies<br>
 npm install truffle chai truffle-assertions ganache-cli @chainlink/contracts @openzeppelin\contracts  truffle-hdwallet-provider dotenv openzeppelin-solidity
-4. Within Visual Studio, open terminal and run following commands in order
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$cd blockchain-developer-bootcamp-final-project/
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$truffle compile
-dabin@LAPTOP-6JML0LG1:~/consensys/blockchain-developer-bootcamp-final-project$truffle develop
-truffle(develop)> migrate
-truffle(develop)> test
+4. Within Visual Studio, open terminal and run following commands in order<br>
+$cd blockchain-developer-bootcamp-final-project/<br>
+$truffle compile <br>
+$truffle develop<br>
+truffle(develop)> migrate<br>
+truffle(develop)> test<br>
 6. From Visual Studio Code explorer tab, right click on index.html and click "Open with Live Server (Alt + L Alt + O)
 7. Web Browser should display the Web UI for the Decentralized Swtich Game Exchange
 8. Click on Connect to MetaMask to authenticate and connect your MetaMask wallet.
 9. Network to be used 
 If you are deploying locally> Local ganache with your WSL/Ganache IP address and Port
 
+ETH Wallet Address for the NFT Certificate<br>
+0x9C3f53D80C3a0184A2Db0A06Ff07d0DedF5F493A
 
 When deployed locally, it should run locally at 127.0.0.1, port 9545.
+Walkthrough video is available under /Project Requirements/Consensys Walkthrough - Dabin.mp4
